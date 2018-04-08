@@ -26,6 +26,7 @@ urlpatterns = [
     url('', views.home, name='home'),
     # url('food/', include('food.urls', namespace='food')),
     path('admin/', admin.site.urls),
+    path('credits/', views.credits, name='credits'),
 ]
 
 if settings.DEBUG:

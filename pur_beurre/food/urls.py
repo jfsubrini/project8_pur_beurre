@@ -8,4 +8,8 @@ urlpatterns = [
     # url(r'^$', views.selection, name='selection'),
     # path(r'^$', views.food, name='food'),    
     path('', views.home, name='home'),
+    path('credits/', views.credits, name='credits'),
+    # path('', views.home, name='home'),
+    # path('', views.home, name='home'),
+    # path('', views.home, name='home'),
 ]
