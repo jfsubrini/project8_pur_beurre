@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Pur Beurre - Le site web qui améliore notre hygiène alimentaire !">
+    <meta name="author" content="Jean-François Subrini">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    {% load static %}
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'food/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="{% static 'food/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+    <!-- For headers -->    
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic' rel='stylesheet' type='text/css'>
+    <!-- For paragraphs -->    
+    <link href='https://fonts.googleapis.com/css?family=Scope+One:400' rel='stylesheet' type='text/css'>
+    <!-- For the rest -->    
+    <link href='https://fonts.googleapis.com/css?family=Scope+One:300,600,700|Open+Sans:700' rel='stylesheet' type='text/css'>
+
+    <!-- Plugin CSS -->
+    <link href="{% static 'food/vendor/magnific-popup/magnific-popup.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'food/css/creative.min.css' %}" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'food/img/logo/logo_pur_beurre-favicon.png' %}" type="image/x-icon">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="img-fluid" src="img/logo/logo_pur_beurre.png" alt="Logo Pur Beurre" title="Logo Pur Beurre" width="70" height="70">Pur Beurre</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#"><img class="img-fluid" src="img/icons/noun_29691_cc.png" alt="Chercher" title="Chercher" width="50" height="50">Chercher</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#"><img class="img-fluid" src="img/icons/noun_29691_cc.png" alt="Mon compte" title="Mon compte" width="50" height="50">Mon compte</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#"><img class="img-fluid" src="img/icons/noun_29691_cc.png" alt="Mes aliments" title="Mes aliments" width="50" height="50">Mes aliments</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact"><img class="img-fluid" src="img/icons/noun_29691_cc.png" alt="Log in - Log out" title="Log in - Log out" width="50" height="50">Déconnexion</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div>
+      {% block content %}{% endblock %}
+    </div>
+
+    <footer class="bg-dark text-white">
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-lg-6 "><a href="/credits.html">Mentions légales</div>
+          <div class="col-lg-6"><a href="#contact">Contact</div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'food/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'food/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="{% static 'food/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'food/vendor/scrollreveal/scrollreveal.min.js' %}"></script>
+    <script src="{% static 'food/vendor/magnific-popup/jquery.magnific-popup.min.js' %}"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="{% static 'food/js/creative.min.js' %}"></script>
+
+  </body>
+
+</html>
