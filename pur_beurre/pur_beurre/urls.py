@@ -27,6 +27,7 @@ urlpatterns = [
     # url('food/', include('food.urls', namespace='food')),
     path('admin/', admin.site.urls),
     path('credits/', views.credits, name='credits'),
+    path('account/', views.account, name='account'),
 ]
 
 if settings.DEBUG:

@@ -14,6 +14,7 @@ from django.db import models
 # class MyAccount(models.Model):
 #     name = models.CharField(max_length=100)
 #     email = models.EmailField(max_length=100)
+#     password = models.CharField(max_length=100)
 
 
 #     class Meta:
@@ -38,11 +39,13 @@ from django.db import models
 
 # class Food(models.Model):
 #     name = models.CharField(max_length=255, unique=True)
-#     # nutrition_grade = EnumChoiceField(NutritionGrade)
+#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     nutrition_grade = EnumChoiceField(NutritionGrade)
 #     nutrition_score = models.SmallIntegerField()
 #     url = models.URLField()
-#     image = models.URLField(null=True)  ## null ?
-#     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+#     image_food = models.URLField(null=True)  ## null ?
+#     image_score = models.URLField(null=True)  ## null ?
+#     image_nutrition = models.URLField(null=True)  ## null ?
 
 
 #     class Meta:

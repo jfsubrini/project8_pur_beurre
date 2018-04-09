@@ -1,0 +1,17 @@
+{% extends 'food/base.html' %}
+{% block title %}Votre compte{% endblock %}
+{% block content %}
+{% load static %}
+
+
+{% if send %}Votre compte a bien été enregistré. Bienvenue {{ name }} !{% endif %}
+
+<form action='{% url "account" %}' method='post'>
+	
+	{% csrf_token %}
+	{ form.as_p }
+	<input type='submit' value='Submit'>
+
+</form>
+
+{% endblock %}

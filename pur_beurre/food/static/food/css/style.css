@@ -1,0 +1,57 @@
+/* CSS FOR TEMPLATES */
+
+
+
+/* HEADER CSS - Base.html */
+
+#chercher {
+	margin-top: 5px;
+	font-family: 'Open Sans';
+	font-weight: 700;
+	color: #D3D3D3;
+	text-align: center;
+}
+
+#moncompte {
+	padding-left: 10px;
+	padding-right: 6px;
+}
+
+#deconnexion {
+	padding-left: 10px;
+	padding-right: 1px;
+}
+
+
+/* HOME BODY CSS - Home.html */
+
+#separation_home {
+	padding: .3em 0;
+	background-color: #345A61;
+}
+
+#history_width {
+  max-width: 700px;
+}
+
+/* FOOTER CSS - Base.html */
+
+#footer {
+	font-family: "Open Sans";
+	font-weight: 600;
+	font-size: 20px;
+	color: #C45525;
+	background-color: #345A61;
+	height: 5em;
+	padding-top: 20px;
+}
+
+#footer a {
+    text-decoration: none;
+}
+#footer a:hover {
+    color: ivory;
+}
+#footer a:active {
+    color: black;
+}
