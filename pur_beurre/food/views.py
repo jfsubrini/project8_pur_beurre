@@ -6,7 +6,7 @@ from django.urls import reverse
 # from .models import MyAccount, Category, Food, MyHealthyFood
 # from .models import NutritionGrade
 
-from .forms import AccountForm, ParagraphErrorList
+from .forms import AccountForm, ParagraphErrorList, ConnexionForm
 
 
 
@@ -20,13 +20,14 @@ def account(request):
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            return render(request, 'food/account.html', local())
+            context = {'username' : username, 'email' : email, 'password' : password}
+            return render(request, 'food/account.html', context)
         else:
             context['errors'] = form.errors.items()
     else:
         form = AccountForm()
-    # context['form'] = form
-    return render(request, 'food/account.html', {})
+    context = {'form': form}
+    return render(request, 'food/account.html', context)
 
 def connexion(request):
     error = False
@@ -43,8 +44,8 @@ def connexion(request):
                 error = True
     else:
         form = ConnexionForm()
-
-    return render(request, 'food/connexion.html', local())
+    context = {'form': form}
+    return render(request, 'food/connexion.html', context)
 
 def deconnexion(request):
     logout(request)
@@ -54,5 +55,4 @@ def credits(request):
     return render(request, 'food/credits.html')
 
 def selection(request):
-    # context = {'title': 'Mon super titre'}   #####
-    return render(request, 'food/selection.html', {})
+    return render(request, 'food/selection.html')
