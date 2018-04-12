@@ -2,7 +2,7 @@
 
 
 
-/* HEADER CSS - Base.html */
+/* HEADER CSS - base.html */
 
 #chercher {
 	margin-top: 5px;
@@ -23,7 +23,7 @@
 }
 
 
-/* HOME BODY CSS - Home.html */
+/* Some CSS details for home.html */
 
 #separation_home {
 	padding: .3em 0;
@@ -31,10 +31,44 @@
 }
 
 #history_width {
-  max-width: 700px;
+	max-width: 700px;
 }
 
-/* FOOTER CSS - Base.html */
+#button_design {
+	border-radius: 0px;
+  	text-transform: capitalize;
+  	letter-spacing: 1px;
+}
+
+
+/* Background image for account.html and credits.html */
+
+.account_img, .credits_img {
+	padding-top: 10rem;
+  	padding-bottom: calc(10rem - 56px);
+  	background-position: center center;
+  	-webkit-background-size: cover;
+  	-moz-background-size: cover;
+  	-o-background-size: cover;
+  	background-size: cover;
+}
+
+.account_img {
+	background-image: url("../img/account.jpg");
+}
+
+.credits_img {
+  	background-image: url("../img/credits.jpg");
+}
+
+/* Color of the headline for various templates */
+
+#account_bonbon, #credits_bonbon, #selection_bonbon {
+	color: #86EBE6;
+}
+
+
+/* FOOTER CSS - base.html */
 
 #footer {
 	font-family: "Open Sans";

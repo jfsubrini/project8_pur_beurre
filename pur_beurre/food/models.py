@@ -11,18 +11,18 @@ from django.db import models
 #     e = "E"
 
 
-# class MyAccount(models.Model):
-#     name = models.CharField(max_length=100)
-#     email = models.EmailField(max_length=100)
-#     password = models.CharField(max_length=100)
+class MyAccount(models.Model):
+    username = models.CharField(max_length=100)
+    email = models.EmailField(max_length=100)
+    password = models.CharField(max_length=100)
 
 
-#     class Meta:
-#         verbose_name = "utilisateur"
+    class Meta:
+        verbose_name = "utilisateur"
 
 
-#     def __str__(self):
-#         return self.name
+    def __str__(self):
+        return self.username
 
 
 # class Category(models.Model):
