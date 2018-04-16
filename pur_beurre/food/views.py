@@ -2,7 +2,7 @@
 
 
 from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from .models import MyAccount, Category, Food, MyHealthyFood
@@ -52,14 +52,17 @@ def connexion(request):
     context = {'form': form}
     return render(request, 'food/connexion.html', context)
 
-def deconnexion(request):
-    """Log out function"""
-    logout(request)
-    return redirect(reverse(connexion))
+# def deconnexion(request):
+#     """Log out function"""
+#     logout(request)
+#     return redirect(reverse(connexion))
 
 def foodresult(request):
     """View to the page that displays all the food products
     related to the category searched by the user"""
+    # query = request.GET.get('query')
+    # Query = get_object_or_404(Food)
+    # if not query:
     return render(request, 'food/foodresult.html')
 
 def foodinfo(request):

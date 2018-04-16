@@ -3,10 +3,9 @@
 
 
 /* HEADER CSS - base.html */
-
 #chercher {
 	margin-top: 5px;
-	font-family: 'Open Sans';
+	font-family: 'Open Sans', sans-serif;
 	font-weight: 700;
 	color: #D3D3D3;
 	text-align: center;
@@ -23,8 +22,31 @@
 }
 
 
-/* Some CSS details for home.html */
+/* HEADER CSS - foodresult.html */
+.food_to_replace {
+	padding-top: 8rem;
+  	padding-bottom: calc(3rem - 56px);
+/*  	background: #345A61 url("../img/front_fr.3.400.jpg") no-repeat center center;
+*/	background-color: #345A61;
+}
 
+.food_name {
+	font-family: "Open Sans", sans-serif;
+	font-weight: 400;
+	font-size: 1.2em;
+}
+
+
+/* HEADER CSS - selection.html */
+.my_food {
+	padding-top: 10rem;
+  	padding-bottom: calc(6rem - 56px);
+	background-color: #345A61;
+	color: #C45525;
+}
+
+
+/* Some CSS details for home.html */
 #separation_home {
 	padding: .3em 0;
 	background-color: #345A61;
@@ -41,9 +63,8 @@
 }
 
 
-/* Background image for account.html and credits.html */
-
-.account_img, .credits_img {
+/* Background image for different templates */
+.account_img, .connexion_img, .credits_img, .foodresult_img {
 	padding-top: 10rem;
   	padding-bottom: calc(10rem - 56px);
   	background-position: center center;
@@ -57,21 +78,105 @@
 	background-image: url("../img/account.jpg");
 }
 
+.connexion_img {
+	background-image: url("../img/connexion.jpg");
+}
+
 .credits_img {
   	background-image: url("../img/credits.jpg");
 }
 
-/* Color of the headline for various templates */
+.foodresult_img {
+  	background-image: url("../img/credits.jpg") !important;  /* A changer l'image */
+}
 
-#account_bonbon, #credits_bonbon, #selection_bonbon {
+/* Color of the headline for various templates */
+#account_bonbon, #connexion_bonbon, #credits_bonbon, #selection_bonbon {
 	color: #86EBE6;
+}
+
+/* Food items section - foodresult.html & selection.html */
+.pad_title {
+	padding: 60px 20px;
+}
+
+.pad_items {
+	width: 100%;
+	margin: auto;
+	padding-left: 15%;
+	padding-right: 15%;	
+}
+
+.img_center {
+	margin: auto;
+}
+
+.food_items {
+	font-family: "Scope One", sans-serif;
+	font-weight: 300;
+	font-size: 1.3em;
+	text-align: center;
+	padding: 10px 0;
+}
+.food_items a {
+	text-decoration: none;
+	color: #345A61;
+}
+.food_items a:hover {
+	padding: 10px;
+	background-color: #DE9440;
+	color: #86EBE6;
+}
+.food_items a:active {
+	color: #345A61;
+}
+
+.save {
+	font-family: "Scope One", sans-serif; /* marche pas */
+	font-weight: 300; /* marche pas */
+	font-size: 1.1em;
+	text-align: center;
+	text-decoration: none;
+	margin-bottom: 2em;
+}
+.save a {
+	color: #345A61;
+}
+.save a:hover {
+	padding: 10px;
+	background-color: #DE9440;
+	color: #86EBE6;
+}
+.save a:active {
+	color: #345A61;
+}
+
+/* foodinfo.html */
+.off_url {
+	padding: 10px;
+	margin: 70px 15%;
+	text-align: center;
+	border: 2px solid #DE9440;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #E8A75D;
+}
+.off_url a {
+	color: #345A61;
+	text-decoration: none;
+}
+.off_url a:hover {
+	color: #86EBE6;
+}
+.off_url a:active {
+	color: #345A61;
 }
 
 
 /* FOOTER CSS - base.html */
-
 #footer {
-	font-family: "Open Sans";
+	font-family: "Open Sans", sans-serif;
 	font-weight: 600;
 	font-size: 20px;
 	color: #C45525;

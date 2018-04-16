@@ -65,7 +65,7 @@ class Food(models.Model):
 
 class MyHealthyFood(models.Model):
     """To create the MyHealthyFood table in the database"""
-    food = models.OneToOneField(Food)
+    food = models.OneToOneField(Food, on_delete=models.CASCADE)
     # myaccount = models.ManyToManyField(MyAccount, blank=True) ### A REVOIR blank, code ici ?
 
 

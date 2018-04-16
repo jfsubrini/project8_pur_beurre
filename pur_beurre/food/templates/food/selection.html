@@ -3,134 +3,137 @@
 {% block content %}
 {% load static %}
 
-<header class="masthead text-center text-white d-flex">
-
+<header class="my_food text-center d-flex">
+  <div class="container my-auto">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <h1>Mes Aliments</h1>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- A FAIRE -->
-<section id="separation_home"></section>
-<section class="bg-dark text-white"></section>
-<!-- - -->
-
-
-<section id="services" class="selection_img">
+<section class="pad_title">
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading" id="selection_bonbon">Ma sélection de produits sains...</h2>
+        <h2 class="section-heading">Ma liste de produits bons et sains :</h2>
         <hr class="my-4">
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <div class="service-box mt-5 mx-auto" id="history_width">
-          <i class="fa fa-4x fa-newspaper-o text-primary mb-3 sr-icons"></i>
-          <h3 class="mb-3">Open Fodd Facts</h3>
-        </div>
-      </div>
-    </div>
   </div>
 </section>
 
-<div id="separation_home"></div>
-
-<section class="p-0" id="portfolio">
-  <div class="container-fluid p-0">
-    <div class="row no-gutters popup-gallery">
-      <div class="col-md-2 col-md-offset-1 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X1
-              </div>
-            </div>
-          </div>
-        </a>
+<section class="p-0">
+  <div class="container">
+    <div class="row popup-gallery pad_items">
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
-      <div class="col-md-2 col-md-offset-2 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit X">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X2
-              </div>
-            </div>
-          </div>
-        </a>
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
-      <div class="col-md-2 col-md-offset-2 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit X">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X3
-              </div>
-            </div>
-          </div>
-        </a>
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
     </div>
-    <div class="row no-gutters popup-gallery">
-      <div class="col-md-2 col-md-offset-1 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit X">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X4
-              </div>
-            </div>
-          </div>
-        </a>
+
+    <div class="row popup-gallery pad_items">
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
-      <div class="col-md-2 col-md-offset-2 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit X">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X5
-              </div>
-            </div>
-          </div>
-        </a>
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
-      <div class="col-md-2 col-md-offset-2 col-sm-12">
-        <a class="portfolio-box" href="{% static 'food/front_fr.3.400' %}">
-          <img class="img-fluid" src="{% static 'food/front_fr.3.400' %}" alt="Photo du produit">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Photo
-              </div>
-              <div class="project-name">
-                Produit X6
-              </div>
-            </div>
-          </div>
-        </a>
+      <div class="col-md-4 col-xs-12">
+        <a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+          <figure>
+            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+              <div class="portfolio-box-caption">
+                <div class="portfolio-box-caption-content">
+                  <div class="project-category text-faded">
+                    Photo
+                  </div>
+                  <div class="project-name">
+                    food.name
+                  </div>
+                </div>
+              </div></a>
+            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
+          </figure>
       </div>
     </div>
   </div>
-</section>
+</section>  
 
 {% endblock %}
