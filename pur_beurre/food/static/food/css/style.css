@@ -64,7 +64,7 @@
 
 
 /* Background image for different templates */
-.account_img, .connexion_img, .credits_img, .foodresult_img {
+.account_img, .create_img, .connexion_img, .credits_img, .foodresult_img {
 	padding-top: 10rem;
   	padding-bottom: calc(10rem - 56px);
   	background-position: center center;
@@ -76,6 +76,10 @@
 
 .account_img {
 	background-image: url("../img/account.jpg");
+}
+
+.create_img {
+	background-image: url("../img/create.jpg");
 }
 
 .connexion_img {
@@ -91,7 +95,7 @@
 }
 
 /* Color of the headline for various templates */
-#account_bonbon, #connexion_bonbon, #credits_bonbon, #selection_bonbon {
+#create_bonbon, #connexion_bonbon, #credits_bonbon, #selection_bonbon {
 	color: #86EBE6;
 }
 
@@ -172,7 +176,7 @@
 }
 
 /* foodinfo.html */
-.off_url {
+.off_url, .my_email {
 	padding: 10px;
 	margin: 70px 15%;
 	text-align: center;
@@ -191,6 +195,11 @@
 }
 .off_url a:active {
 	color: #345A61;
+}
+
+/* Template account.html */
+.my_email {
+	margin: 0;
 }
 
 

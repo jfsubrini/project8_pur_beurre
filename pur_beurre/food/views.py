@@ -16,8 +16,8 @@ def home(request):
     """View to the homepage"""
     return render(request, 'food/home.html')
 
-def account(request):
-    """View to the user account page"""
+def create(request):
+    """View to the user account creation page"""
     if request.method == "POST":
         form = AccountForm(request.POST, error_class=ParagraphErrorList)
         if form.is_valid():
@@ -31,7 +31,11 @@ def account(request):
     else:
         form = AccountForm()
     context = {'form': form}
-    return render(request, 'food/account.html', context)
+    return render(request, 'food/create.html', context)
+
+def account(request):
+    """View to the user account page"""
+    return render(request, 'food/account.html')
 
 def connexion(request):
     """View to the log in page"""
