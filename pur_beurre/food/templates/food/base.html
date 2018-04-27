@@ -32,9 +32,9 @@
 
     <!-- Own CSS to adjust the Creative theme to the client requirements specifications -->
     <link href="{% static 'food/css/style.css' %}" rel="stylesheet">
-
+ 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{% static 'food/img/logo/logo_pur_beurre-favicon.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'food/img/logo/logo_pur_beurre-favicon.png' %}" type="image/png">
 
   </head>
 
@@ -43,24 +43,38 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="img-fluid" src="{% static 'food/img/logo/logo_pur_beurre.png' %}" alt="Logo Pur Beurre" title="Logo Pur Beurre" width="70" height="70"> Pur Beurre</a>
+        <a class="navbar-brand js-scroll-trigger" href="/home#page-top"><img class="img-fluid" src="{% static 'food/img/logo/logo_pur_beurre.png' %}" alt="Logo Pur Beurre" title="Logo Pur Beurre" width="70" height="70"> Pur Beurre</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#"><input type="text" name="search_mini" placeholder="Chercher" id="chercher"></a>
+              <form method="get" action="{% url 'foodresult' %}">
+              <a class="nav-link js-scroll-trigger" href="#"><input type="text" name="query" placeholder="Chercher" id="chercher"></a>
+              </form>
+            </li>
+
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="{% url 'account' %}"><i class="fa fa-user fa-2x" id="moncompte"></i> Mon compte</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/account"><i class="fa fa-user fa-2x" id="moncompte"></i> Mon compte</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'selection' %}"><img class="img-fluid" src="{% static 'food/img/icons/noun_29691_cc.png' %}" alt="Mes aliments" title="Mes aliments" width="41" height="41">Mes aliments</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/selection"><img class="img-fluid" src="{% static 'food/img/icons/noun_29691_cc.png' %}" alt="Mes aliments" title="Mes aliments" width="41" height="41">Mes aliments</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}"><i class="fa fa-sign-out fa-2x" id="deconnexion"></i> Déconnexion</a>
+            </li>
+
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="{% url 'login' %}"><i class="fa fa-user fa-2x" id="moncompte"></i> Se connecter</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#"><i class="fa fa-sign-out fa-2x" id="deconnexion"></i> Déconnexion</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'register' %}"><img class="img-fluid" src="{% static 'food/img/icons/noun_29691_cc.png' %}" alt="Créer un compte" title="Créer un compte" width="41" height="41">Créer un compte</a>
             </li>
+            {% endif %}
+
           </ul>
         </div>
       </div>
@@ -70,13 +84,12 @@
       {% block content %}{% endblock %}
     </div>
 
-<!--     <footer class="bg-dark text-white">
- -->      
+    <!-- Footer -->  
     <footer id="footer">
       <div class="container text-center">
         <div class="row">
-          <div class="col-lg-6 "><a href="/credits">Mentions légales</div>
-          <div class="col-lg-6"><a href="/#contact">Contact</div>
+          <div class="col-lg-6 "><a href="{% url 'credits' %}">Mentions légales</div>
+          <div class="col-lg-6"><a href="{% url 'home' %}#contact">Contact</div>
         </div>
       </div>
     </footer>

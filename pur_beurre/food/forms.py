@@ -5,15 +5,16 @@ from django.forms import ModelForm, TextInput, EmailInput, PasswordInput
 # from django import forms
 from django.forms.utils import ErrorList
 
-from .models import MyAccount
+from django.contrib.auth.models import User
 
 
 
 class AccountForm(ModelForm):
     """Form to create the user account, based on the Account model"""
+    
     class Meta:
-        model = MyAccount
-        fields = '__all__'
+        model = User
+        fields = ('username', 'email', 'password')
         widgets = {
             'username': TextInput(attrs={'class': 'form-control form-control-lg', \
                 'id': 'username', 'placeholder': 'Entrez votre nom d\'utilisateur'}),
@@ -32,14 +33,15 @@ class ParagraphErrorList(ErrorList):
         if not self:
             return ''
         return '<div class="errorlist">%s</div>' % ''.join(['<p class="small error">%s</p>' \
-            % e for e in self])
+            % e for e in self]) #### A revoir 34 et 35
 
 
 class ConnexionForm(ModelForm):
     """Form for the log in, based on the Account model"""
+    
     class Meta:
-        model = MyAccount
-        exclude = ('email',)
+        model = User
+        fields = ('username', 'password')
         widgets = {
             'username': TextInput(attrs={'class': 'form-control form-control-lg', \
                 'id': 'username', 'placeholder': 'Entrez votre nom d\'utilisateur'}),

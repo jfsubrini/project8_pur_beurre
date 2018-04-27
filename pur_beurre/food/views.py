@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from .models import MyAccount, Category, Food, MyHealthyFood
+from .models import MySelection, Category, Food
 from .models import NutritionGrade
 
 from .forms import AccountForm, ParagraphErrorList, ConnexionForm
@@ -16,7 +16,7 @@ def home(request):
     """View to the homepage"""
     return render(request, 'food/home.html')
 
-def create(request):
+def register(request):
     """View to the user account creation page"""
     if request.method == "POST":
         form = AccountForm(request.POST, error_class=ParagraphErrorList)
@@ -31,13 +31,13 @@ def create(request):
     else:
         form = AccountForm()
     context = {'form': form}
-    return render(request, 'food/create.html', context)
+    return render(request, 'food/register.html', context)
 
 def account(request):
     """View to the user account page"""
     return render(request, 'food/account.html')
 
-def connexion(request):
+def login(request):
     """View to the log in page"""
     error = False
 
@@ -54,19 +54,29 @@ def connexion(request):
     else:
         form = ConnexionForm()
     context = {'form': form}
-    return render(request, 'food/connexion.html', context)
+    return render(request, 'food/login.html', context)
 
-# def deconnexion(request):
-#     """Log out function"""
-#     logout(request)
-#     return redirect(reverse(connexion))
+def logout(request):
+    """Log out function"""
+    logout(request)
+    return redirect(reverse(login))
 
 def foodresult(request):
     """View to the page that displays all the food products
     related to the category searched by the user"""
-    # query = request.GET.get('query')
-    # Query = get_object_or_404(Food)
-    # if not query:
+    # query = request.GET.get('text')
+    # list_query = query.split(',')
+    # textname = list_query[0]
+    # textbrand = list_query[1]    
+    # food_search = Food.objects.filter(
+    #     name__icontains = textname,
+    #     brand__icontains = textbrand)[0]
+    # category_search = food_search.category.all()
+    selection_list = Food.objects.filter(
+        nutrition_grade__lt = food.nutrition_grade)
+    selection_list = selection_list.order_by(
+        'nutrition_grade', 'nutrition_score', 'name', 'brand')
+    selection_list = selection_list.distinct('name')[:6] 
     return render(request, 'food/foodresult.html')
 
 def foodinfo(request):

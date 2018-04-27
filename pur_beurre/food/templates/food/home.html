@@ -8,10 +8,7 @@
   <div class="container my-auto">
     <div class="row">
       <div class="col-lg-10 mx-auto">
-        <h1>
-<!--         <h1 class="text-uppercase">          
- -->          <strong>Du gras, oui, mais de qualité !</strong>
-        </h1>
+        <h1><strong>Du gras, oui, mais de qualité !</strong></h1>
         <hr>
       </div>
     <div class="col-lg-8 mx-auto">
@@ -20,9 +17,9 @@
     <!-- Input field design -->
     <div class="row">
       <div class="input-group mb-3 btn btn-primary btn-xl js-scroll-trigger">
-        <form class="col-md-12 form-inline input-group" action='{% url "food:account" %}' method='post' role="form">
+        <form class="col-md-12 form-inline input-group" action='{% url "foodresult" %}' method='get' role="form">
           {% csrf_token %}
-          <input type="text" class="form-control" placeholder="Produit" aria-label="Produit" aria-describedby="basic-addon2">
+          <input type="text" class="form-control" name="query" placeholder="Produit" aria-label="Produit" aria-describedby="basic-addon2">
           <div class="input-group-append">
             <button class="btn btn-secondary" id="button_design" type="button">Chercher</button>
           </div>
