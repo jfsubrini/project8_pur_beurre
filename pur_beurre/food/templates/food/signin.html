@@ -26,25 +26,16 @@
 	<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p>
 	{% endif %}
 
-	{% if user.is_error %}
-	A hoy {{ user.username }} !
-	{% else %} -->
-	<!-- ######### -->
-
-<!-- {% if errors or login_failed %}
-            <h2>Problème :</h2>
-            <p class="notif">
-                {% for key, error in errors %}
-                    {% autoescape off %}
-                    {{ error }}
-                    {% endautoescape %}
-                {% endfor %}
-                {% if login_failed %}
-                    Erreur de connexion : merci de vérifier votre identifiant et votre mot de passe.
-                {% endif %}
-            </p>
-            <hr/>
-            {% endif %} -->
+	{% if errors or login_failed %}
+        {% for key, error in errors %}
+            {% autoescape off %}
+            {{ error }}
+            {% endautoescape %}
+        {% endfor %}
+        {% if login_failed %}
+		<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p
+		{% endif %}
+      {% endif %} -->
 
 
 <!-- User account form -->
