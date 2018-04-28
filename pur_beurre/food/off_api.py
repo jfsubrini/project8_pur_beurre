@@ -2,29 +2,25 @@
 # -*- coding: utf-8 -*-
 
 """
-Module that use the OpenFoodFacts API to collect all the data needed for the pur_beurre database.
-
+Module that uses the OpenFoodFacts API to collect
+all the data needed for the pur_beurre database.
 """
 
 
+# Standard librairies imports
 from pprint import pprint
 import requests
 
-from food.models import Food, Category
+# Imports from my app
+from .models import Food, Category
+from .constants import OFF_API_URL, CATEGORIES_LIST
 
 
 
 class OpenFoodFacts_API:
-    """ Class that collect all the data needed for 10 categories from the OpenFoodFacts API."""
-
-    # Class instance : 10 different categories of food.
-    CATEGORIES_LIST = ['Chips et frites', 'Confitures', \
-                        'Crêpes et galettes', \
-                        'Desserts au chocolat', \
-                        'Gâteaux', 'Pâtes à tartiner', \
-                        'Petit-déjeuners', 'Salades composées', \
-                        'Sandwichs', 'Tartes']
-
+    """ Class that collects all the data needed for all selected categories
+    from the OpenFoodFacts API.
+    """
 
     def __init__(self, query=''):
         """Initializer / Instance Attributes"""
@@ -35,15 +31,14 @@ class OpenFoodFacts_API:
         """Method that take each category from the class instance list and requests
         the data needed for pur_beurre database from the OFF API."""
         i = 0
-        while i < len(OpenFoodFacts_API.CATEGORIES_LIST):
-            for category in OpenFoodFacts_API.CATEGORIES_LIST:
+        while i < len(CATEGORIES_LIST):
+            for category in CATEGORIES_LIST:
                 self.user_query = category
-                
+
                 def getFoodData(user_query):
                     """Request to the Open Food Facts REST API to collect data for one category."""
-                    URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
                     payload = {'search_terms': self.user_query, 'page_size': 1000, 'json': 1}
-                    response = requests.get(URL, params=payload)
+                    response = requests.get(OFF_API_URL, params=payload)
                     openfoodfacts = response.json()
                     j = 0
                     for item in range(0, openfoodfacts['count']):

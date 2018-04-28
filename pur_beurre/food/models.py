@@ -1,12 +1,12 @@
 """All the models for the food app of the pur_beurre project."""
 
 
-# Imports
+# Standard librairy imports
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
+# Django imports
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
-# from django.conf import settings
 
 
 
@@ -24,8 +24,8 @@ class Category(models.Model):
     name = models.CharField("catégorie", max_length=100, unique=True)
 
     class Meta:
-        verbose_name="catégorie"
-    
+        verbose_name = "catégorie"
+
     def __str__(self):
         return self.name
 
@@ -44,7 +44,7 @@ class Food(models.Model):
 
     class Meta:
         """Each (name + brand) item must be unique."""
-        verbose_name="aliment"
+        verbose_name = "aliment"
         unique_together = ("name", "brand")
 
     def __str__(self):
@@ -54,30 +54,12 @@ class Food(models.Model):
 class MySelection(models.Model):
     """To create the MySelection table in the database which stores
     the selected healthy foods of each user."""
-    user = models.OneToOneField(User, on_delete=models.PROTECT, 
-        related_name='user_selection', verbose_name="utilisateur")
-    # user = models.OneToOneField(settings.AUTH_USER_MODEL)    
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     my_healthy_foods = models.ManyToManyField(
         Food, related_name='healthy_foods_selection', verbose_name="mes aliments sains")
-    # avec null=True ?
 
     class Meta:
-        verbose_name="ma sélection"
+        verbose_name = "ma sélection"
 
     def __str__(self):
         return self.user
-
-#### OR ... #####
-# class MyAccount(models.Model):
-#     username = models.CharField("nom d'utilisateur", max_length=100)
-#     # username = models.OneToOneField(User, on_delete=models.PROTECT, related_name='user')
-#     email = models.EmailField("email de l'utilisateur", max_length=100)
-#     password = models.CharField("mot de passe de l'utilisateur", max_length=100)
-#     my_healthy_foods = models.ManyToManyField(
-#         Food, related_name='healthy_foods', verbose_name="mes aliments sains")
-
-#     class Meta:
-#         verbose_name="utilisateur"
-
-#     def __str__(self):
-#         return self.username      

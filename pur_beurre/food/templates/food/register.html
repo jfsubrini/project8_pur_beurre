@@ -21,26 +21,61 @@
 		</div>
 	</div>
 
+
+<!-- A REVOIR -->
+<!-- {% if errors or already_exists %}
+            <h2>Problème :</h2>
+            <p class="notif">
+                {% for key, error in errors %}
+                    {% autoescape off %}
+                    {{ error }}
+                    {% endautoescape %}
+                {% endfor %}
+                {% if already_exists %}
+                    Cette adresse e-mail est déjà utilisée.
+                {% endif %}
+            </p>
+            <hr/>
+            {% endif %} -->
+<!-- ####### -->
+
+	<!-- A REVOIR -->
+<!-- 	{% if errors %}
+	<div>
+		{% for key, error in errors %}
+		{% autoescape off %}
+			{{ error }}
+		{% endautoescape %}
+		{% endfor %}
+	</div>
+	{% endif %} -->
+	<!-- ####### -->
+
+
 <!-- User account form -->
 	<div class="container">
-	  <form action="" method='post'>{% csrf_token %}
+	  <form action="" method='post'>
+	  	{% csrf_token %}
 	    
 	    <div class="form-group row {% if form.username.errors %}has-warning has-feedback{% endif %}">
-	      <label for="{{ form.username.id_for_label }}" class="col-sm-2 col-form-label sr-only">Nom</label>
+<!-- 	      <label for="{{ form.username.id_for_label }}" class="col-sm-2 col-form-label sr-only">Nom</label> -->
+	      <label class="col-sm-2 col-form-label sr-only">Nom</label>
 	      <div class="col-sm-12">
 	      	{{ form.username }}
 	      </div>
 	    </div>
 
 	    <div class="form-group row {% if form.email.errors %}has-warning has-feedback{% endif %}">
-	      <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label sr-only">Email</label>
+<!-- 	      <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label sr-only">Email</label> -->
+	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.email }}
 	      </div>
 	    </div>
 
 	    <div class="form-group row {% if form.password.errors %}has-warning has-feedback{% endif %}">
-	      <label for="{{ form.password.id_for_label }}" class="col-sm-2 col-form-label sr-only">Mot de passe</label>
+<!-- 	      <label for="{{ form.password.id_for_label }}" class="col-sm-2 col-form-label sr-only">Mot de passe</label> -->
+	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.password }}
 	      </div>
@@ -54,17 +89,6 @@
 	  
 	  </form>
 	</div>
-
-	{% if errors %}
-	<div>
-		{% for key, error in errors %}
-		{% autoescape off %}
-			{{ error }}
-		{% endautoescape %}
-		{% endfor %}
-	</div>
-
-{% endif %}
 
 </section>
 
