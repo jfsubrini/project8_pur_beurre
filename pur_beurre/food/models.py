@@ -54,7 +54,7 @@ class Food(models.Model):
 class MySelection(models.Model):
     """To create the MySelection table in the database which stores
     the selected healthy foods of each user."""
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     my_healthy_foods = models.ManyToManyField(
         Food, related_name='healthy_foods_selection', verbose_name="mes aliments sains")
 

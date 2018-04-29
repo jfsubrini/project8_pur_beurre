@@ -63,12 +63,12 @@
               <a class="nav-link js-scroll-trigger" href="{% url 'selection' %}"><img class="img-fluid" src="{% static 'food/img/icons/noun_29691_cc.png' %}" alt="Mes aliments" title="Mes aliments" width="41" height="41">Mes aliments</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="{% url 'logout' %}"><i class="fa fa-sign-out fa-2x" id="deconnexion"></i> Déconnexion</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'signout' %}"><i class="fa fa-sign-out fa-2x" id="deconnexion"></i> Déconnexion</a>
             </li>
 
             {% else %}
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="{% url 'login' %}"><i class="fa fa-user fa-2x" id="moncompte"></i> Se connecter</a>
+              <a class="nav-link js-scroll-trigger" href="{% url 'signin' %}"><i class="fa fa-user fa-2x" id="moncompte"></i> Se connecter</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="{% url 'register' %}"><img class="img-fluid" src="{% static 'food/img/icons/noun_29691_cc.png' %}" alt="Créer un compte" title="Créer un compte" width="41" height="41">Créer un compte</a>

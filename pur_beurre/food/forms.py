@@ -11,7 +11,7 @@ from django.forms.utils import ErrorList
 
 class AccountForm(ModelForm):
     """Form to create the user register account, based on the Django User model"""
-
+    
     class Meta:
         """Details of the register form and attributes settings for CSS."""
         model = User
@@ -20,7 +20,7 @@ class AccountForm(ModelForm):
             'username': TextInput(attrs={'class': 'form-control form-control-lg', \
                 'id': 'username', 'placeholder': 'Entrez votre nom d\'utilisateur'}),
             'email': EmailInput(attrs={'class': 'form-control form-control-lg', \
-                'id': 'inputEmail', 'placeholder': 'Entrez votre email'}),
+                'id': 'inputEmail', 'placeholder': 'Entrez votre email', 'required': 'required'}),
             'password': PasswordInput(attrs={'class': 'form-control form-control-lg', \
                 'id': 'inputPassword', 'placeholder': 'Entrez votre mot de passe'})
         }
@@ -34,8 +34,7 @@ class ParagraphErrorList(ErrorList):
     def as_divs(self):
         if not self:
             return ''
-        return '<div class="errorlist">%s</div>' % ''.join(['<p class="small error">%s</p>' \
-            % e for e in self]) #### A revoir 34 et 35
+        return ''.join([e for e in self])
 
 
 class ConnexionForm(ModelForm):

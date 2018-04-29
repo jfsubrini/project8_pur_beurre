@@ -25,18 +25,17 @@ def register(request):
     if request.method == "POST":
         form = AccountForm(request.POST, error_class=ParagraphErrorList)
         if form.is_valid():
-            form.save()    ######
+            form.save()
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = authenticated(username=username, email=email, password=password)
+            user = authenticate(username=username, email=email, password=password)
             login(request, user)
             return redirect('home')
-        else:
-            context['errors'] = form.errors.items()
     else:
         form = AccountForm()
     context = {'form': form}
+    context['errors'] = form.errors.items()
     return render(request, 'food/register.html', context)
 
 

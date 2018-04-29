@@ -4,11 +4,11 @@
 {% load static %}
 
 
-<section class="create_img">
+<section class="register_img">
 	<div class="container">
 		<div class="row">
 		  <div class="col-lg-12 text-center">
-		    <h2 class="section-heading" id="create_bonbon">Créez votre compte</h2>
+		    <h2 class="section-heading" id="register_bonbon">Créez votre compte</h2>
 		    <hr class="my-4">
 		  </div>
 		</div>
@@ -21,38 +21,12 @@
 		</div>
 	</div>
 
-
-<!-- A REVOIR -->
-<!-- {% if errors or already_exists %}
-        {% for key, error in errors %}
-            {% autoescape off %}
-            {{ error }}
-            {% endautoescape %}
-        {% endfor %}
-        {% if already_exists %}
-        <p>Cette adresse email a déjà été utilisée.</p>
-        {% endif %}
-      {% endif %}
-
-	 {% if errors %}
-	<div>
-		{% for key, error in errors %}
-		{% autoescape off %}
-			{{ error }}
-		{% endautoescape %}
-		{% endfor %}
-	</div>
-	{% endif %} -->
-	<!-- ####### -->
-
-
-<!-- User account form -->
+	<!-- User account form -->
 	<div class="container">
 	  <form action="" method='post'>
 	  	{% csrf_token %}
 	    
 	    <div class="form-group row {% if form.username.errors %}has-warning has-feedback{% endif %}">
-<!-- 	      <label for="{{ form.username.id_for_label }}" class="col-sm-2 col-form-label sr-only">Nom</label> -->
 	      <label class="col-sm-2 col-form-label sr-only">Nom</label>
 	      <div class="col-sm-12">
 	      	{{ form.username }}
@@ -60,7 +34,6 @@
 	    </div>
 
 	    <div class="form-group row {% if form.email.errors %}has-warning has-feedback{% endif %}">
-<!-- 	      <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label sr-only">Email</label> -->
 	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.email }}
@@ -68,7 +41,6 @@
 	    </div>
 
 	    <div class="form-group row {% if form.password.errors %}has-warning has-feedback{% endif %}">
-<!-- 	      <label for="{{ form.password.id_for_label }}" class="col-sm-2 col-form-label sr-only">Mot de passe</label> -->
 	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.password }}
@@ -82,6 +54,15 @@
 	    </div>
 	  
 	  </form>
+	
+		<!-- Input filling errors messages -->	
+		<div class="filling_errors">
+			{% if errors %}
+	    		{% for key, error in errors %}
+        			{{ error|safe }}
+        		{% endfor %}
+    		{% endif %}
+		</div>
 	</div>
 
 </section>

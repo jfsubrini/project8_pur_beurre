@@ -64,7 +64,7 @@
 
 
 /* Background image for different templates */
-.account_img, .create_img, .connexion_img, .credits_img, .foodresult_img {
+.account_img, .register_img, .signin_img, .credits_img, .foodresult_img {
 	padding-top: 10rem;
   	padding-bottom: calc(10rem - 56px);
   	background-position: center center;
@@ -78,12 +78,12 @@
 	background-image: url("../img/account.jpg");
 }
 
-.create_img {
-	background-image: url("../img/create.jpg");
+.register_img {
+	background-image: url("../img/register.jpg");
 }
 
-.connexion_img {
-	background-image: url("../img/connexion.jpg");
+.signin_img {
+	background-image: url("../img/signin.jpg");
 }
 
 .credits_img {
@@ -95,7 +95,7 @@
 }
 
 /* Color of the headline for various templates */
-#create_bonbon, #connexion_bonbon, #credits_bonbon, #selection_bonbon {
+#register_bonbon, #signin_bonbon, #credits_bonbon, #selection_bonbon {
 	color: #86EBE6;
 }
 
@@ -197,6 +197,15 @@
 /* Template account.html */
 .my_email {
 	margin: 0;
+}
+
+/* Templates register.html & signin.html */
+.filling_errors {
+	color: white;
+	font-family: "Scope One";
+	font-weight: 700;
+	font-size: 20px;
+	letter-spacing: 1.2px;
 }
 
 

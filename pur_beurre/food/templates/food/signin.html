@@ -4,11 +4,11 @@
 {% load static %}
 
 
-<section class="connexion_img">
+<section class="signin_img">
 	<div class="container">
 		<div class="row">
 		  <div class="col-lg-12 text-center">
-		    <h2 class="section-heading" id="connexion_bonbon">Se connecter</h2>
+		    <h2 class="section-heading" id="signin_bonbon">Se connecter</h2>
 		    <hr class="my-4">
 		  </div>
 		</div>
@@ -21,30 +21,12 @@
 		</div>
 	</div>
 
-	<!-- A REVOIR -->
-<!-- 	{% if error %}
-	<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p>
-	{% endif %}
-
-	{% if errors or login_failed %}
-        {% for key, error in errors %}
-            {% autoescape off %}
-            {{ error }}
-            {% endautoescape %}
-        {% endfor %}
-        {% if login_failed %}
-		<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p
-		{% endif %}
-      {% endif %} -->
-
-
-<!-- User account form -->
+	<!-- User account form -->
 	<div class="container">
 	  <form action="" method='post'>
 	  	{% csrf_token %}
 	  	{{ form.non_field_errors }}
 	    <div class="form-group row {% if form.username.errors %}has-warning has-feedback{% endif %}">
-<!-- 	      <label for="{{ form.username.id_for_label }}" class="col-sm-2 col-form-label sr-only">Nom</label> -->
 	      <label class="col-sm-2 col-form-label sr-only">Nom</label>
 	      <div class="col-sm-12">
 	      	{{ form.username }}
@@ -52,7 +34,6 @@
 	    </div>
 
 	    <div class="form-group row {% if form.password.errors %}has-warning has-feedback{% endif %}">
-<!-- 	      <label for="{{ form.password.id_for_label }}" class="col-sm-2 col-form-label sr-only">Mot de passe</label> -->
 	      <label class="col-sm-2 col-form-label sr-only">Mot de passe</label>
 	      <div class="col-sm-12">
 	      	{{ form.password }}
@@ -66,9 +47,33 @@
 	    </div>
 	  
 	  </form>
+
+		<!-- Input filling errors messages -->	
+	<!-- A REVOIR -->
+		<div class="filling_errors">
+           <!--  {% if login_failed %}
+                Echec de connexion : veuillez vérifier votre nom et votre mot de passe.
+            {% endif %} -->
+
+<!--  {% if user.is_authenticated %}
+           YES
+            {% else %}
+            NO
+            {% endif %} -->
+
+<!--
+	{% if errors or login_failed %}
+        {% for key, error in errors %}
+            {{ error|safe }}
+        {% endfor %}
+        {% if login_failed %}
+		<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p
+		{% endif %}
+      {% endif %} -->
+
+		</div>
+
 	</div>
-	
-	{% endif %}
 
 </section>
 
