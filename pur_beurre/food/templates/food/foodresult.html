@@ -25,7 +25,6 @@
   </div>
 </section>
 
-{% if paginate %}
 <section class="p-0">
   <div class="container">
     <div class="row popup-gallery pad_items">
@@ -71,13 +70,14 @@
     </div>
   </div>
 </section>
-  
+
+{% if paginate %}
   <ul class='pager'>
-    {% if foods.has_previous %}
-      <li><a href="?page={{ foods.previous_page_number }}">Précédent</a></li>
+    {% if substitutes.has_previous %}
+      <li class='previous'><a href="?page={{ substitutes.previous_page_number }}">Précédent</a></li>
     {% endif %}
-    {% if foods.has_next %}
-      <li><a href="?page={{ foods.next_page_number }}">Suivant</a></li>
+    {% if substitutes.has_next %}
+      <li class='next'><a href="?page={{ substitutes.next_page_number }}">Suivant</a></li>
     {% endif %}
   </ul>
 

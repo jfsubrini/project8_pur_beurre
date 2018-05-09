@@ -37,6 +37,7 @@ def register(request):
     else:
         form = AccountForm()
 
+    # What to render
     context = {
         'form': form,
         'errors': form.errors.items()
@@ -76,6 +77,7 @@ def signin(request):
     else:
         form = ConnexionForm()
 
+    # What to render
     context = {
         'form': form,
         'errors': form.errors.items(),
@@ -94,31 +96,56 @@ def signout(request):
 
 ####### RESULTATS DE LA RECHERCHE #######
 def foodresult(request):
-    """View to the page that displays all the food products
+    """View to the page that displays all the substitute food products
     related to the category searched by the user."""
-    # query = request.GET.get('text')
-    # list_query = query.split(',')
-    # textname = list_query[0]
-    # textbrand = list_query[1]
-    # food_search = Food.objects.filter(
-    #     name__icontains=textname,
-    #     brand__icontains=textbrand)[0]
-    # category_search = food_search.category.all()
-    food_list = Food.objects.filter(
-        nutrition_grade__lt=food.nutrition_grade)
-    food_list = food_list.order_by(
-        'nutrition_grade', 'nutrition_score', 'name', 'brand')
-    food_list = food_list.distinct('name')
-    paginator = Paginator(food_list, 6)
+
+    query = request.GET.get('query')
+    if not query:
+        return render(request, 'food/home.html')
+        # raise Http404 ### A importer
+
+    # Parsing of the query to better find the query product
+    #  into the database, searching by name and brand.
+    query = query.split(',')
+    query_name = query[0]
+    query_brand = query[1]
+    food_search = Food.objects.filter(
+        name__icontains=query_name,
+        brand__icontains=query_brand)[:1]
+
+    # If the query product is not in the pur_beurre database.
+    # if not food_search:
+    #     context = {
+    #     'no_food_search': True
+    #     }
+    #     return render(request, 'food/home.html', context)
+        # raise Http404 ### A importer
+
+    # If the query product has been found in our database.
+    food_search = food_search[0] ### not sure !!!
+
+    # Query expressions to find into the db the substitutes products :
+    # same category and better nutrition_grade than the food_search.
+    substitutes = Food.objects.filter(
+        category=food_search.category,
+        nutrition_grade__lt=food_search.nutrition_grade)
+    substitutes = substitutes.order_by(
+        'nutrition_grade', 'nutrition_score')
+    # substitutes = substitutes.distinct('name', 'brand') ## not sure !
+
+    # Pagination : no more than 6 substitute products in a page.
+    paginator = Paginator(substitutes, 6)
     page = request.GET.get('page')
     try:
-        foods = paginator.page(page)
+        substitutes = paginator.page(page)
     except PageNotAnInteger:
-        foods = paginator.page(1)
+        substitutes = paginator.page(1)
     except EmptyPage:
-        foods = paginator.page(paginator.num_pages)
+        substitutes = paginator.page(paginator.num_pages)
+
+    # What to render
     context = {
-        'foods': foods,
+        'substitutes': substitutes,
         'paginate': True
     }
     return render(request, 'food/foodresult.html', context)
