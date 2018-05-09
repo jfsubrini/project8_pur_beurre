@@ -146,6 +146,7 @@ def foodresult(request):
     # What to render
     context = {
         'substitutes': substitutes,
+        'food_search': food_search,
         'paginate': True
     }
     return render(request, 'food/foodresult.html', context)

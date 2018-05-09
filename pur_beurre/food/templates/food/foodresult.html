@@ -1,14 +1,15 @@
 {% extends 'food/base.html' %}
-{% block title %}Résultats{% endblock %}
+{% block title %}Résultats{% endblock title %}
 {% block content %}
 {% load static %}
 
+<!-- Food to replace -->
 <header class="food_to_replace text-center text-white d-flex">
   <div class="container my-auto">
     <div class="row">
       <div class="col-lg-8 mx-auto">
-        <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="20%">
-        <h1 class="food_name">Aliment cherché</h1><!--Ou food.name ???-->
+        <img class="img-fluid img_center" src="{{ food_search.image_food }}" alt="{{ food_search.name }}" width="20%">
+        <h1 class="food_name">Aliment cherché : {{ food_search.name|truncatechars:30 }}</h1>
       </div>
     </div>
   </div>
@@ -18,69 +19,62 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading">Vous pouvez remplacer cet aliment par :</h2>
+        <!-- In case there is no substitute product in the database -->
+        {% if substitutes|lenght_is:"0" %}
+          <h2 class="section-heading">Désolé mais nous n'avons pas de produit de substitution à votre aliment.<br>Visiblement vous vous alimentez très sainement !</h2>
+        
+        <!-- Normal case, with substitutes not empty -->
+        {% else %}
+          <h2 class="section-heading">Vous pouvez remplacer cet aliment par :</h2>
         <hr class="my-4">
       </div>
     </div>
   </div>
 </section>
 
+<!-- Showing the substitute products, maximum 6 by page -->
 <section class="p-0">
   <div class="container">
     <div class="row popup-gallery pad_items">
+      
+      {% for substitute in substitutes %}
       <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+        <a class="portfolio-box badge1" data-badge="{{ substitute.nutrition_grade }}" href="{{ substitute.image_food }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
           <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+            <img class="img-fluid img_center" src="{{ substitute.image_food }}" alt="{{ substitute.name }}" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
                     Photo
                   </div>
                   <div class="project-name">
-                    food.name
+                    {{ substitute.name }}
                   </div>
                 </div>
               </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-            <figcaption class="save"><a href="{% url 'selection' %}"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
+            <figcaption class="food_items"><a href="{% url 'foodinfo' substitute_id=substitute.id %}">{{ substitute.name|truncatechars:20 }}</a></figcaption>
+            <figcaption class="save"><a href="{% url 'selection' substitute_id=substitute.id %}"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
           </figure>
       </div>
-    </div>
-
-    <div class="row popup-gallery pad_items">
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-            <figcaption class="save"><a href="{% url 'selection' %}"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
-          </figure>
-      </div>
+        {% if forloop.counter|divisibleby:3 %}
+          <div class="row popup-gallery pad_items"></div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </section>
+        {% endif %}
 
-{% if paginate %}
-  <ul class='pager'>
-    {% if substitutes.has_previous %}
-      <li class='previous'><a href="?page={{ substitutes.previous_page_number }}">Précédent</a></li>
-    {% endif %}
-    {% if substitutes.has_next %}
-      <li class='next'><a href="?page={{ substitutes.next_page_number }}">Suivant</a></li>
-    {% endif %}
-  </ul>
+  <!-- Pagination -->
+  {% if paginate %}
+    <ul class='pager'>
+      {% if substitutes.has_previous %}
+        <li class='previous'><a href="?page={{ substitutes.previous_page_number }}">Page précédente</a></li>
+      {% endif %}
+      {% if substitutes.has_next %}
+        <li class='next'><a href="?page={{ substitutes.next_page_number }}">Page suivante</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
 
-{% endif %}
-
-{% endblock %}
+{% endblock content %}
