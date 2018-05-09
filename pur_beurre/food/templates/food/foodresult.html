@@ -25,6 +25,7 @@
   </div>
 </section>
 
+{% if paginate %}
 <section class="p-0">
   <div class="container">
     <div class="row popup-gallery pad_items">
@@ -42,45 +43,8 @@
                   </div>
                 </div>
               </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.25.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.
-            25.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
+            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
+            <figcaption class="save"><a href="{% url 'selection' %}"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
           </figure>
       </div>
     </div>
@@ -100,48 +64,23 @@
                   </div>
                 </div>
               </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="/foodinfo">food.name</a></figcaption>
-            <figcaption class="save"><a href="/selection"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
+            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
+            <figcaption class="save"><a href="{% url 'selection' %}"><span class="fa fa-save fa-lg"> Sauvegarder</span></a></figcaption>
           </figure>
       </div>
     </div>
   </div>
-</section>  
+</section>
+  
+  <ul class='pager'>
+    {% if foods.has_previous %}
+      <li><a href="?page={{ foods.previous_page_number }}">Précédent</a></li>
+    {% endif %}
+    {% if foods.has_next %}
+      <li><a href="?page={{ foods.next_page_number }}">Suivant</a></li>
+    {% endif %}
+  </ul>
+
+{% endif %}
 
 {% endblock %}

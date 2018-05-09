@@ -25,15 +25,15 @@
 	<div class="container">
 	  <form action="" method='post'>
 	  	{% csrf_token %}
-	  	{{ form.non_field_errors }}
-	    <div class="form-group row {% if form.username.errors %}has-warning has-feedback{% endif %}">
+
+		<div class="form-group row">
 	      <label class="col-sm-2 col-form-label sr-only">Nom</label>
 	      <div class="col-sm-12">
 	      	{{ form.username }}
 	      </div>
 	    </div>
 
-	    <div class="form-group row {% if form.password.errors %}has-warning has-feedback{% endif %}">
+	    <div class="form-group row">
 	      <label class="col-sm-2 col-form-label sr-only">Mot de passe</label>
 	      <div class="col-sm-12">
 	      	{{ form.password }}
@@ -48,29 +48,12 @@
 	  
 	  </form>
 
-		<!-- Input filling errors messages -->	
-	<!-- A REVOIR -->
+		<!-- Connexion failed message -->	
 		<div class="filling_errors">
-           <!--  {% if login_failed %}
-                Echec de connexion : veuillez vérifier votre nom et votre mot de passe.
-            {% endif %} -->
 
-<!--  {% if user.is_authenticated %}
-           YES
-            {% else %}
-            NO
-            {% endif %} -->
-
-<!--
-	{% if errors or login_failed %}
-        {% for key, error in errors %}
-            {{ error|safe }}
-        {% endfor %}
-        {% if login_failed %}
-		<p><strong>Utilisateur inconnu ou mot de passe erroné.</strong></p
-		{% endif %}
-      {% endif %} -->
-
+        {% if signin_failed %}
+			<p><strong>Le nom d'utilisateur est inconnu ou/et le mot de passe est erroné.<br>Veuillez essayer à nouveau avec les bonnes coordonnées de votre compte.</strong></p>
+      	{% endif %}
 		</div>
 
 	</div>
@@ -78,9 +61,3 @@
 </section>
 
 {% endblock %}
-
-
-
-
-
-

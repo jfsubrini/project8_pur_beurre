@@ -1,4 +1,4 @@
-"""Food app URL Configuration"""
+"""Food app URL Configuration."""
 
 
 # Django imports
@@ -18,7 +18,7 @@ urlpatterns = [
     path('account/signin/', views.signin, name='signin'),
     path('account/signout/', views.signout, name='signout'),
     path('foodresult/', views.foodresult, name='foodresult'),
-    re_path(r'^foodinfo/(?P<id_food>[0-9]+)/$', views.foodinfo, name='foodinfo'),
+    re_path(r'^foodinfo/(?P<food_id>[0-9]+)/$', views.foodinfo, name='foodinfo'),
     path('selection/', views.selection, name='selection'),
     path('credits/', views.credits, name='credits'),
 ]

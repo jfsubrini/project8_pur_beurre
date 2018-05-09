@@ -1,17 +1,18 @@
-"""Forms to create the user account and for the log in"""
+"""Forms to create the user account and for the sign in."""
 
 
 # Django imports
 from django.forms import ModelForm, TextInput, EmailInput, PasswordInput
+from django.forms.utils import ErrorList
+
 from django.contrib.auth.models import User
 
-from django.forms.utils import ErrorList
 
 
 
 class AccountForm(ModelForm):
-    """Form to create the user register account, based on the Django User model"""
-    
+    """Form to create the user register account, based on the Django User model."""
+
     class Meta:
         """Details of the register form and attributes settings for CSS."""
         model = User
@@ -26,8 +27,8 @@ class AccountForm(ModelForm):
         }
 
 
-class ParagraphErrorList(ErrorList):
-    """Function to manage the validation errors in the forms"""
+class ValidationErrorList(ErrorList):
+    """Function to manage the validation errors in the forms."""
     def __str__(self):
         return self.as_divs()
 
@@ -38,10 +39,10 @@ class ParagraphErrorList(ErrorList):
 
 
 class ConnexionForm(ModelForm):
-    """Form for the log in, based on the Django User model"""
+    """Form for the sign in, based on the Django User model."""
 
     class Meta:
-        """Details of the log in form and attributes settings for CSS."""
+        """Details of the sign in form and attributes settings for CSS."""
         model = User
         fields = ['username', 'password']
         widgets = {

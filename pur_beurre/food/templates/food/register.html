@@ -23,24 +23,24 @@
 
 	<!-- User account form -->
 	<div class="container">
-	  <form action="" method='post'>
+	  <form action='' method='post'>
 	  	{% csrf_token %}
 	    
-	    <div class="form-group row {% if form.username.errors %}has-warning has-feedback{% endif %}">
+	    <div class="form-group row">
 	      <label class="col-sm-2 col-form-label sr-only">Nom</label>
 	      <div class="col-sm-12">
 	      	{{ form.username }}
 	      </div>
 	    </div>
 
-	    <div class="form-group row {% if form.email.errors %}has-warning has-feedback{% endif %}">
+	    <div class="form-group row">
 	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.email }}
 	      </div>
 	    </div>
 
-	    <div class="form-group row {% if form.password.errors %}has-warning has-feedback{% endif %}">
+	    <div class="form-group row">
 	      <label class="col-sm-2 col-form-label sr-only">Email</label>
 	      <div class="col-sm-12">
 	      	{{ form.password }}
@@ -59,8 +59,10 @@
 		<div class="filling_errors">
 			{% if errors %}
 	    		{% for key, error in errors %}
-        			{{ error|safe }}
-        		{% endfor %}
+					{% autoescape off %}
+        				<li>{{ error }}</li>
+      				{% endautoescape %}
+              	{% endfor %}
     		{% endif %}
 		</div>
 	</div>

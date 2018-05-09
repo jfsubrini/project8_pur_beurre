@@ -1,15 +1,15 @@
-"""All the views for the food app of the pur_beurre project"""
+"""All the views for the food app of the pur_beurre project."""
 
 
 # Django imports
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect
-# from django.http import Http404
 
 # Imports from my app
 from .models import NutritionGrade, Category, Food, MySelection
-from .forms import AccountForm, ParagraphErrorList, ConnexionForm
+from .forms import AccountForm, ValidationErrorList, ConnexionForm
 
 
 
@@ -22,20 +22,25 @@ def home(request):
 ####### CREATION DE COMPTE #######
 def register(request):
     """View to the user account creation page and validation of the user form."""
+    # Analysis and treatment of the register form that has been sent.
     if request.method == "POST":
-        form = AccountForm(request.POST, error_class=ParagraphErrorList)
+        form = AccountForm(request.POST, error_class=ValidationErrorList)
         if form.is_valid():
             form.save()
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = authenticate(username=username, email=email, password=password)
+            user = authenticate(request, username=username, email=email, password=password)
+            # If data are valid, automatic log in and redirection to 'Mon Compte' page.
             login(request, user)
-            return redirect('home')
+            return redirect('account')
     else:
         form = AccountForm()
-    context = {'form': form}
-    context['errors'] = form.errors.items()
+
+    context = {
+        'form': form,
+        'errors': form.errors.items()
+        }
     return render(request, 'food/register.html', context)
 
 
@@ -45,30 +50,43 @@ def account(request):
     """View to the user account information page."""
     return render(request, 'food/account.html')
 
+
 ####### CONNEXION #######
 def signin(request):
     """View to the log in page."""
-    error = False
+    signin_failed = False
 
+    # In case the user is already logged in, redirection to homepage.
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    # Analysis and treatment of the sign in form that has been sent.
     if request.method == "POST":
         form = ConnexionForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user:
+            user = authenticate(request, username=username, password=password)
+            # If the connexion is valid, log in and redirection to 'Mon Compte' page.
+            if user is not None:
                 login(request, user)
+                return redirect('account')
             else:
-                error = True
+                signin_failed = True
     else:
         form = ConnexionForm()
-    context = {'form': form}
+
+    context = {
+        'form': form,
+        'errors': form.errors.items(),
+        'signin_failed': signin_failed
+        }
     return render(request, 'food/signin.html', context)
 
 
 ####### DECONNEXION #######
 def signout(request):
-    """Log out function."""
+    """Log out function with redirection to homepage."""
     if request.user.is_authenticated:
         logout(request)
     return redirect('home')
@@ -86,12 +104,24 @@ def foodresult(request):
     #     name__icontains=textname,
     #     brand__icontains=textbrand)[0]
     # category_search = food_search.category.all()
-    selection_list = Food.objects.filter(
+    food_list = Food.objects.filter(
         nutrition_grade__lt=food.nutrition_grade)
-    selection_list = selection_list.order_by(
+    food_list = food_list.order_by(
         'nutrition_grade', 'nutrition_score', 'name', 'brand')
-    selection_list = selection_list.distinct('name')[:6]
-    return render(request, 'food/foodresult.html')
+    food_list = food_list.distinct('name')
+    paginator = Paginator(food_list, 6)
+    page = request.GET.get('page')
+    try:
+        foods = paginator.page(page)
+    except PageNotAnInteger:
+        foods = paginator.page(1)
+    except EmptyPage:
+        foods = paginator.page(paginator.num_pages)
+    context = {
+        'foods': foods,
+        'paginate': True
+    }
+    return render(request, 'food/foodresult.html', context)
 
 
 ####### PAGE D'INFORMATION SUR L'ALIMENT #######
