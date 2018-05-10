@@ -7,8 +7,8 @@
   <div class="container my-auto">
     <div class="row">
       <div class="col-lg-8 mx-auto">
-        <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.25.400.jpg' %}" alt="Photo du produit" width="20%">
-        <h1 class="food_name">food.name</h1>
+        <img class="img-fluid img_center" src="{{ food_info.image_food }}" alt="{{ food_info.name }}" width="20%">
+        <h1 class="food_name">{{ food_info.name }}</h1>
       </div>
     </div>
   </div>
@@ -31,8 +31,8 @@
       <div class="col-md-6">
         <figure>
           <figcaption class="food_items">Nutriscore</figcaption>
-          	<a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/nutriscore_a.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/nutriscore_a.jpg' %}" alt="Photo du produit" width="100%">
+          	<a class="portfolio-box" href="{% static 'food/img/nutriscore/nutriscore_{{ food_info.nutrition_grade }}' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+            <img class="img-fluid img_center" src="{% static 'food/img/nutriscore/nutriscore_{{ food_info.nutrition_grade }}' %}" alt="Nutriscore de {{ food_info.name }} : {{ food_info.nutrition_grade }}" width="100%">
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
@@ -49,8 +49,8 @@
       <div class="col-md-6">
         <figure>
           <figcaption class="food_items">Repères nutritionnels pour 100g</figcaption>
-          	<a class="portfolio-box" href="{% static 'food/img/portfolio/fullsize/nutrition_fr.17.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/nutrition_fr.17.400.jpg' %}" alt="Photo du produit" width="100%">
+          	<a class="portfolio-box" href="{{ food_info.image_nutrition }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+            <img class="img-fluid img_center" src="{{ food_info.image_nutrition }}" alt="Repères nutritionnels pour 100g de {{ food_info.name }}" width="100%">
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
@@ -70,7 +70,7 @@
   <div class="container my-auto">
     <div class="row">
       <div class="col-md-12">
-        <h3 class="off_url"><a href="https://world-fr.openfoodfacts.org/produit/20534011/wraps-jambon-fromage-de-brebis-sauce-au-yaourt-chef-select-to-go">Voir la fiche d'OpenFoodFacts</a></h3>
+        <h3 class="off_url"><a href="{{ food_info.url }}">Voir la fiche d'OpenFoodFacts</a></h3>
       </div>
     </div>
   </div>

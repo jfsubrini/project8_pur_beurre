@@ -155,7 +155,13 @@ def foodresult(request):
 ####### PAGE D'INFORMATION SUR L'ALIMENT #######
 def foodinfo(request):
     """View to the page that gives food information for each product."""
-    return render(request, 'food/foodinfo.html')
+    food_info = get_object_or_404(Food, pk=id)
+
+    # What to render
+    context = {
+        'food_info': food_info
+    }
+    return render(request, 'food/foodinfo.html', context)
 
 
 ####### PAGE DE SELECTION DES ALIMENTS SAINS #######
