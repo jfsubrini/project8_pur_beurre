@@ -17,123 +17,73 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <h2 class="section-heading">Ma liste de produits bons et sains :</h2>
+        <!-- In case there isn't any saved substitute product into the database -->
+        {% if foods_saved|lenght_is:"0" %}
+          <h2 class="section-heading">Vous n'avez pas encore sauvegardé d'aliment dans votre portefeuille de produits sains.<br>
+          N'hésitez pas à en chercher dans notre base de données depuis notre <a href="{% url 'home' %}">page d'accueil</a>.</h2>          
+
+        <!-- Presence of saved substitute product(s) in the user portofolio -->
+        {% else %}
+          <h2 class="section-heading">Ma liste de produits bons et sains :</h2>
         <hr class="my-4">
       </div>
     </div>
   </div>
 </section>
 
+<!-- Showing the list of the selected products by the user, maximum 6 by page -->
 <section class="p-0">
   <div class="container">
     <div class="row popup-gallery pad_items">
+      
+      {% for food_saved in foods_saved %}
       <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+        <a class="portfolio-box badge1" data-badge="{{ food_saved.nutrition_grade }}" href="{{ food_saved.image_food }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
           <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+            <img class="img-fluid img_center" src="{{ food_saved.image_food }}" alt="{{ food_saved.name }}" width="100%">
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
                     Photo
                   </div>
                   <div class="project-name">
-                    food.name
+                    {{ food_saved.name }}
                   </div>
                 </div>
               </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
+            <figcaption class="food_items"><a href="{% url 'foodinfo' food_saved_id=food_saved.id %}">{{ food_saved.name|truncatechars:20 }}</a></figcaption>
+            <!-- Showing the erase icon to delete a selected product into the database -->
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="food_saved_delete" value="{{ food_saved.id }}">
+                <figcaption class="save"><button><span class="fa fa-trash fa-lg"> Supprimer</span></button></figcaption>
+              </form>
           </figure>
       </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-          </figure>
-      </div>
-    </div>
-
-    <div class="row popup-gallery pad_items">
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-          </figure>
-      </div>
-      <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="A" href="{% static 'food/img/portfolio/fullsize/front_fr.3.400.jpg' %}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
-          <figure>
-            <img class="img-fluid img_center" src="{% static 'food/img/portfolio/thumbnails/front_fr.3.400.jpg' %}" alt="Photo du produit" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Photo
-                  </div>
-                  <div class="project-name">
-                    food.name
-                  </div>
-                </div>
-              </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' %}">food.name</a></figcaption>
-          </figure>
-      </div>
+        {% if forloop.counter|divisibleby:3 %}
+          <div class="row popup-gallery pad_items"></div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
-</section>  
+</section>
+        {% endif %}
+
+  <!-- Selected food deleted message -->
+<!--   {% if selected_deleted %}
+    <h3>Aliment supprimé de votre portefeuille de produits sains.</h3>>
+  {% endif %} -->
+
+  <!-- Pagination -->
+  {% if paginate %}
+    <ul class='pager'>
+      {% if foods_saved.has_previous %}
+        <li class='previous'><a href="?page={{ foods_saved.previous_page_number }}">Page précédente</a></li>
+      {% endif %}
+      {% if foods_saved.has_next %}
+        <li class='next'><a href="?page={{ foods_saved.next_page_number }}">Page suivante</a></li>
+      {% endif %}
+    </ul>
+  {% endif %}
 
 {% endblock content %}

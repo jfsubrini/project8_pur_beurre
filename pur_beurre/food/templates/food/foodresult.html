@@ -19,7 +19,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <!-- In case there is no substitute product in the database -->
+        <!-- In case there is no substitute product into the database -->
         {% if substitutes|lenght_is:"0" %}
           <h2 class="section-heading">Désolé mais nous n'avons pas de produit de substitution à votre aliment.<br>Visiblement vous vous alimentez très sainement !</h2>
         
@@ -57,7 +57,7 @@
             {% if user.is_authenticated %}
               <form method="post">
                 {% csrf_token %}
-                <input type="hidden" name="food_id" value="{{ substitute.id }}">
+                <input type="hidden" name="food_id" value="{{ substitute.food_id }}">
                 <figcaption class="save"><button><span class="fa fa-save fa-lg"> Sauvegarder</span></button></figcaption> <!-- button ?!? -->
               </form>
             {% endif %}

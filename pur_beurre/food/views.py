@@ -6,17 +6,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic.detail import DetailView  #### Si on garde la vue générique FoodInfo
+
 
 # Imports from my app
 from .models import NutritionGrade, Category, Food, MySelection
 from .forms import AccountForm, ValidationErrorList, ConnexionForm
 
-
-
-####### PAGE D'ACCUEIL #######
-def home(request):
-    """View to the homepage."""
-    return render(request, 'food/home.html')
 
 
 ####### CREATION DE COMPTE #######
@@ -152,25 +148,47 @@ def foodresult(request):
     return render(request, 'food/foodresult.html', context)
 
 
+# ####### PAGE D'INFORMATION SUR L'ALIMENT #######
+# def foodinfo(request, food_id):
+#     """View to the page that gives food information for each product."""
+#     food_info = get_object_or_404(Food, pk=food_id)
+
+#     # What to render
+#     context = {
+#         'food_info': food_info
+#     }
+#     return render(request, 'food/foodinfo.html', context)
+
+
 ####### PAGE D'INFORMATION SUR L'ALIMENT #######
-def foodinfo(request):
-    """View to the page that gives food information for each product."""
-    food_info = get_object_or_404(Food, pk=id)
+class FoodInfo(DetailView):
+    context_object_name = "food_info"
+    model = Food
+    template_name = "food/foodinfo.html"
+
+
+####### PAGE DE SELECTION DES ALIMENTS SAINS PAR L'UTILISATEUR #######
+@login_required(login_url='/account/signin/', redirect_field_name='redirection_vers')
+def selection(request):
+    """View to the user's personal selection of healthy food."""
+
+    selected_deleted = False
+
+    # If the user wants to delete a selected healthy food from is portofolio
+    if request.method == 'POST':
+        food_saved_delete = request.POST.get('food_saved_delete')
+        food_saved_delete = MySelection.objects.get(pk=food_saved_delete.id)
+        if food_saved_delete:
+            food_saved_delete.delete()
+            selected_deleted = True
+
+    # Getting the list of all the selected healthy foods by the user
+    foods_saved = MySelection.objects.filter(user=request.user)
 
     # What to render
     context = {
-        'food_info': food_info
+        'foods_saved': food_saved,
+        'selected_deleted': selected_deleted
     }
-    return render(request, 'food/foodinfo.html', context)
 
-
-####### PAGE DE SELECTION DES ALIMENTS SAINS #######
-def selection(request):
-    """View to the user's personal selection of healthy food."""
-    return render(request, 'food/selection.html')
-
-
-####### MENTIONS LEGALES #######
-def credits(request):
-    """View to the page for photos, icons, images, etc., credits."""
-    return render(request, 'food/credits.html')
+    return render(request, 'food/selection.html', context)
