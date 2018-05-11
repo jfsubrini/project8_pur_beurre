@@ -101,24 +101,23 @@ def foodresult(request):
         # raise Http404 ### A importer
 
     # Parsing of the query to better find the query product
-    #  into the database, searching by name and brand.
+    #  into the database, searching by name AND brand.
     query = query.split(',')
-    query_name = query[0]
-    query_brand = query[1]
-    food_search = Food.objects.filter(
-        name__icontains=query_name,
-        brand__icontains=query_brand)[:1]
-
-    # If the query product is not in the pur_beurre database.
-    # if not food_search:
-    #     context = {
-    #     'no_food_search': True
-    #     }
-    #     return render(request, 'food/home.html', context)
-        # raise Http404 ### A importer
-
-    # If the query product has been found in our database.
-    food_search = food_search[0] ### not sure !!!
+    query_name = query[0].strip()
+    query_brand = query[1].strip()
+    if query_brand:
+        try:
+            food_search = Food.objects.filter(
+            name__icontains=query_name,
+            brand__icontains=query_brand)[:1].get()
+        except ObjectDoesNotExist:
+            return None
+    else:
+        try:
+            food_search = Food.objects.filter(
+                name__icontains=query_name)[:1].get()
+        except ObjectDoesNotExist:
+            return None
 
     # Query expressions to find into the db the substitutes products :
     # same category and better nutrition_grade than the food_search.
@@ -127,7 +126,7 @@ def foodresult(request):
         nutrition_grade__lt=food_search.nutrition_grade)
     substitutes = substitutes.order_by(
         'nutrition_grade', 'nutrition_score')
-    # substitutes = substitutes.distinct('name', 'brand') ## not sure !
+    substitutes = substitutes.distinct('name', 'brand')
 
     # Pagination : no more than 6 substitute products in a page.
     paginator = Paginator(substitutes, 6)
@@ -141,8 +140,8 @@ def foodresult(request):
 
     # What to render
     context = {
-        'substitutes': substitutes,
         'food_search': food_search,
+        'substitutes': substitutes,
         'paginate': True
     }
     return render(request, 'food/foodresult.html', context)
