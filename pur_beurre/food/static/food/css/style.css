@@ -64,7 +64,7 @@
 
 
 /* Background image for different templates */
-.account_img, .register_img, .signin_img, .credits_img, .foodresult_img {
+.account_img, .register_img, .signin_img, .imprint_img, .foodresult_img {
 	padding-top: 10rem;
   	padding-bottom: calc(10rem - 56px);
   	background-position: center center;
@@ -86,8 +86,8 @@
 	background-image: url("../img/signin.jpg");
 }
 
-.credits_img {
-  	background-image: url("../img/credits.jpg");
+.imprint_img {
+  	background-image: url("../img/imprint.jpg");
 }
 
 .foodresult_img {
@@ -95,7 +95,7 @@
 }
 
 /* Color of the headline for various templates */
-#register_bonbon, #signin_bonbon, #credits_bonbon, #selection_bonbon {
+#register_bonbon, #signin_bonbon, #imprint_bonbon, #selection_bonbon {
 	color: #86EBE6;
 }
 

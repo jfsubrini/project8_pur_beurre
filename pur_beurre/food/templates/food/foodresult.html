@@ -19,13 +19,7 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <!-- In case there is no substitute product into the database -->
-        {% if substitutes|lenght_is:"0" %}
-          <h2 class="section-heading">Désolé mais nous n'avons pas de produit de substitution à votre aliment.<br>Visiblement vous vous alimentez très sainement !</h2>
-        
-        <!-- Normal case, with substitutes not empty -->
-        {% else %}
-          <h2 class="section-heading">Vous pouvez remplacer cet aliment par :</h2>
+        <h2 class="section-heading">Vous pouvez remplacer cet aliment par :</h2>
         <hr class="my-4">
       </div>
     </div>
@@ -52,7 +46,7 @@
                   </div>
                 </div>
               </div></a>
-            <figcaption class="food_items"><a href="{% url 'foodinfo' substitute_id=substitute.id %}">{{ substitute.name|truncatechars:20 }}</a></figcaption>
+            <figcaption class="food_items"><a href="{% url 'foodinfo' pk=substitute.id %}">{{ substitute.name|truncatechars:20 }}</a></figcaption>
             <!-- Showing the save icon to select a substitute product to the user page 'Mes Aliments' -->
             {% if user.is_authenticated %}
               <form method="post">
@@ -63,14 +57,20 @@
             {% endif %}
           </figure>
       </div>
+
+        <!-- Only 3 food products per row -->
         {% if forloop.counter|divisibleby:3 %}
           <div class="row popup-gallery pad_items"></div>
         {% endif %}
+      
+        <!-- In case there is no substitute product into the database -->
+        {% empty %}
+          <h3>Désolé mais nous n'avons pas de produit de substitution à votre aliment.<br>Visiblement vous vous alimentez très sainement !</h3>
+
       {% endfor %}
     </div>
   </div>
 </section>
-        {% endif %}
 
   <!-- Pagination -->
   {% if paginate %}

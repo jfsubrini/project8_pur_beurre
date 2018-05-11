@@ -149,9 +149,9 @@ def foodresult(request):
 
 
 # ####### PAGE D'INFORMATION SUR L'ALIMENT #######
-# def foodinfo(request, food_id):
+# def foodinfo(request, pk):
 #     """View to the page that gives food information for each product."""
-#     food_info = get_object_or_404(Food, pk=food_id)
+#     food_info = get_object_or_404(Food, pk=pk)
 
 #     # What to render
 #     context = {

@@ -17,15 +17,15 @@
     <!-- Input field design -->
     <div class="row">
       <div class="input-group mb-3 btn btn-primary btn-xl js-scroll-trigger">
-        <form class="col-md-12 form-inline input-group" action="{% url 'foodresult' %}" method='get' role="form">
-          <input type="text" class="form-control" name="query" placeholder="Produit" aria-label="Produit" aria-describedby="basic-addon2">
+        <form class="col-md-12 form-inline input-group" method='get' action="{% url 'foodresult' %}">
+          <input type="text" class="form-control" name="query" placeholder="Produit (Nom de votre aliment, marque de l'aliment)" aria-label="Produit (Nom de votre aliment, marque de l'aliment)" aria-describedby="basic-addon2">
           <div class="input-group-append">
-            <button class="btn btn-secondary" id="button_design" type="button">Chercher</button>
+            <button class="btn btn-secondary" id="button_design">Chercher</button>
           </div>
         </form>
       </div>
     </div>
-        <!-- Response if the product has not been food in the pur_beurre database -->
+        <!-- Response if the product has not been found in the pur_beurre database -->
 <!--          if no_food_search 
         <div class="row">Ce produit n'existe pas encore dans notre base de données.<br>
         Essayez un autre produit ou plutôt un produit d'une autre catégorie.</div>
