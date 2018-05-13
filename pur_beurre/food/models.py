@@ -1,7 +1,7 @@
 """All the models for the food app of the pur_beurre project."""
 
 
-# Standard librairy imports
+# Standard library imports
 from enumchoicefield import ChoiceEnum, EnumChoiceField
 
 # Django imports
@@ -46,9 +46,10 @@ class Food(models.Model):
         """Each (name + brand) item must be unique."""
         verbose_name = "aliment"
         unique_together = ("name", "brand")
+        ordering = ['nutrition_grade', 'nutrition_score']
 
     def __str__(self):
-        return self.name
+        return '%s %s' % (self.name, self.brand)
 
 
 class MySelection(models.Model):

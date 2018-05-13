@@ -7,7 +7,7 @@ all the data needed for the pur_beurre database.
 """
 
 
-# Standard librairies imports
+# Standard libraries imports
 import requests
 
 # Imports from my app

@@ -5,6 +5,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+# from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView  #### Si on garde la vue générique FoodInfo
 
@@ -105,18 +106,22 @@ def foodresult(request):
     query = query.split(',')
     query_name = query[0].strip()
     query_brand = query[1].strip()
+    # If the user entered a product name AND a product brand (after the comma).
     if query_brand:
         try:
             food_search = Food.objects.filter(
-            name__icontains=query_name,
-            brand__icontains=query_brand)[:1].get()
-        except ObjectDoesNotExist:
+                name__icontains=query_name,
+                brand__icontains=query_brand)
+            food_search = food_search.order_by('name', 'brand')[0].get()
+        except Food.DoesNotExist:
             return None
+    # If the user only entered a product name.
     else:
         try:
             food_search = Food.objects.filter(
-                name__icontains=query_name)[:1].get()
-        except ObjectDoesNotExist:
+                name__icontains=query_name)
+            food_search = food_search.order_by('name')[0].get()
+        except Food.DoesNotExist:
             return None
 
     # Query expressions to find into the db the substitutes products :
@@ -124,9 +129,12 @@ def foodresult(request):
     substitutes = Food.objects.filter(
         category=food_search.category,
         nutrition_grade__lt=food_search.nutrition_grade)
-    substitutes = substitutes.order_by(
-        'nutrition_grade', 'nutrition_score')
     substitutes = substitutes.distinct('name', 'brand')
+
+    # OR
+    # substitutes_cat = Category.objects.get(name=food_search.category)
+    # substitutes = substitutes.cat.food.category.filter(nutrition_grade__lt=food_search.nutrition_grade)
+    # substitutes = substitutes.distinct('name', 'brand')
 
     # Pagination : no more than 6 substitute products in a page.
     paginator = Paginator(substitutes, 6)
@@ -161,6 +169,7 @@ def foodresult(request):
 
 ####### PAGE D'INFORMATION SUR L'ALIMENT #######
 class FoodInfo(DetailView):
+    """ Generic View for the foodinfo page : 'Page Aliment' """
     context_object_name = "food_info"
     model = Food
     template_name = "food/foodinfo.html"
@@ -186,7 +195,7 @@ def selection(request):
 
     # What to render
     context = {
-        'foods_saved': food_saved,
+        'foods_saved': foods_saved,
         'selected_deleted': selected_deleted
     }
 
