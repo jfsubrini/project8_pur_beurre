@@ -10,6 +10,9 @@ all the data needed for the pur_beurre database.
 # Standard libraries imports
 import requests
 
+# Django imports
+from django.db import transaction, IntegrityError   #########
+
 # Imports from my app
 from constants import OFF_API_URL, CATEGORIES_LIST
 from .models import Food, Category
@@ -32,6 +35,7 @@ class OpenFoodFactsAPI:
         self.nutrition_score = ""
         self.url = ""
 
+    @transaction.atomic
     def categories(self):
         """Method that maintains equivalence between the categories present in the
         CATEGORIES_LIST and the ones prensent into the database Category table."""
@@ -62,32 +66,33 @@ class OpenFoodFactsAPI:
                     response = requests.get(OFF_API_URL, params=payload)
                     openfoodfacts = response.json()
                     j = 0
-                    for item in range(0, openfoodfacts['count']-1):
-                        try:
-                            # If the product item has these data then collects them all.
-                            shortcut = openfoodfacts['products'][item]
-                            self.name = shortcut['product_name']
-                            self.brand = shortcut['brands']
-                            self.image_food = shortcut['image_front_url']
-                            self.image_nutrition = shortcut['image_nutrition_url']
-                            self.nutrition_grade = shortcut['nutrition_grade_fr']
-                            self.nutrition_score = shortcut['nutriments']['nutrition-score-fr_100g']
-                            self.url = shortcut['url']
-                            j += 1
-                            print("Nom : {}".format(self.name))
-                            print("Marque : {}".format(self.brand))
-                            print("Image de l'aliment : {}".format(self.image_food))
-                            print("Image repères nutritionnels : {}".format(self.image_nutrition))
-                            print("Nutriscore : {}".format(self.nutrition_grade))
-                            print("Autre nutriscore : {}".format(self.nutrition_score))
-                            print("URL fiche aliment : {}".format(self.url))
-                            print("Catégorie : {}".format(self.query))
-                            print("N° de l'aliment : {}\n".format(j))
-                            InsertAllData.insert(self.name, self.brand, self.query, \
-                                self.image_food, self.image_nutrition, self.nutrition_grade, \
-                                self.nutrition_score, self.url)
-                        except:
-                            pass
+                    try:
+                        with transaction.atomic():
+                            for item in range(0, openfoodfacts['count']-1):
+                                # If the product item has these data then collects them all.
+                                shortcut = openfoodfacts['products'][item]
+                                self.name = shortcut['product_name']
+                                self.brand = shortcut['brands']
+                                self.image_food = shortcut['image_front_url']
+                                self.image_nutrition = shortcut['image_nutrition_url']
+                                self.nutrition_grade = shortcut['nutrition_grade_fr']
+                                self.nutrition_score = shortcut['nutriments']['nutrition-score-fr_100g']
+                                self.url = shortcut['url']
+                                j += 1
+                                print("Nom : {}".format(self.name))
+                                print("Marque : {}".format(self.brand))
+                                print("Image de l'aliment : {}".format(self.image_food))
+                                print("Image repères nutritionnels : {}".format(self.image_nutrition))
+                                print("Nutriscore : {}".format(self.nutrition_grade))
+                                print("Autre nutriscore : {}".format(self.nutrition_score))
+                                print("URL fiche aliment : {}".format(self.url))
+                                print("Catégorie : {}".format(self.query))
+                                print("N° de l'aliment : {}\n".format(j))
+                                InsertAllData.insert(self.name, self.brand, self.query, \
+                                    self.image_food, self.image_nutrition, self.nutrition_grade, \
+                                    self.nutrition_score, self.url)
+                    except IntegrityError:
+                        pass
                 get_cat_data(self.query)
                 i += 1
 
@@ -96,6 +101,7 @@ class InsertAllData(OpenFoodFactsAPI):
     """ Class that inserts all the data into pur_beurre database.
     """
 
+    @transaction.atomic
     def insert(self):
         """Inserting each data from each category into the Food table."""
         Food.objects.create(
@@ -114,3 +120,17 @@ instance.categories()
 instance.get_all_data()
 
 print("La base de données pur_beurre a bien été mise à jour.\nBon appétit !")
+
+
+##################
+# @transaction.atomic
+# def dfskdfskj(request):
+#     sdsdsd()
+
+#     try:
+#         with transaction.atomic():
+#             pass
+#     except IntegrityError:
+#         pass
+
+#     edfsdfsdf()

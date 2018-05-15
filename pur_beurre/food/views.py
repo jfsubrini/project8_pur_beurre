@@ -3,9 +3,10 @@
 
 # Django imports
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User #####
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-# from django.core.exceptions import ObjectDoesNotExist
+# from django.core.exceptions import ObjectDoesNotExist  #####
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView  #### Si on garde la vue générique FoodInfo
 
@@ -23,10 +24,11 @@ def register(request):
     if request.method == "POST":
         form = AccountForm(request.POST, error_class=ValidationErrorList)
         if form.is_valid():
-            form.save()
+            # form.save() ###
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            user = User.objects.create_user(username, email, password) ###
             user = authenticate(request, username=username, email=email, password=password)
             # If data are valid, automatic log in and redirection to 'Mon Compte' page.
             login(request, user)
@@ -77,7 +79,6 @@ def signin(request):
     # What to render
     context = {
         'form': form,
-        'errors': form.errors.items(),
         'signin_failed': signin_failed
         }
     return render(request, 'food/signin.html', context)
@@ -86,8 +87,7 @@ def signin(request):
 ####### DECONNEXION #######
 def signout(request):
     """Log out function with redirection to homepage."""
-    if request.user.is_authenticated:
-        logout(request)
+    logout(request)
     return redirect('home')
 
 

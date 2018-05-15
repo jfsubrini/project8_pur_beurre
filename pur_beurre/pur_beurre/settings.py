@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+import dj_database_url
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,11 +24,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!q7q$2-2x%5e*ee%5o7(%$v+*z@la_)kd(nl3w0pqkct)@upyo'
+# SECRET_KEY = os.environ.get('SECRET_KEY', '!q7q$2-2x%5e*ee%5o7(%$v+*z@la_)kd(nl3w0pqkct)@upyo')
+# "$.Sk/~%PJ\x0b'T=y<)*+D=\x0b[$T"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('ENV') == 'PRODUCTION':
+    DEBUG = False
+    ALLOWED_HOSTS = ['purbeurre8.herokuapp.com']
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -50,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'pur_beurre.urls'
@@ -122,12 +132,29 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = (
-# 	os.path.join(BASE_DIR, 'static'),
-# )
 
 # Django debug toolbar
 INTERNAL_IPS = ['127.0.0.1']
+
+
+if os.environ.get('ENV') == 'PRODUCTION':
+
+    # Static files settings
+    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+    # Extra places for collect static to find static files.
+    STATICFILES_DIRS = (
+        os.path.join(PROJECT_ROOT, 'static'),
+    )
+    # Simplified static file serving.
+    # https://warehouse.python.org/project/whitenoise/
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    
+    # For Heroku to import the database. 
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
