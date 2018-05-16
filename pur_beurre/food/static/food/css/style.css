@@ -57,6 +57,8 @@
 }
 
 #button_design {
+	-moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
 	border-radius: 0px;
   	text-transform: capitalize;
   	letter-spacing: 1px;
@@ -168,6 +170,8 @@
    height: 40px;
    text-align: center;
    line-height: 40px;
+   -moz-border-radius: 50%;
+   -webkit-border-radius: 50%;
    border-radius: 50%;
    box-shadow: 0 0 1px #333;
 }
@@ -206,6 +210,18 @@
 	font-weight: 700;
 	font-size: 20px;
 	letter-spacing: 1.2px;
+}
+
+/* Template imprint.html */
+.frame {
+	color: #345A61;
+	background-color: white;
+	padding: 10px;
+	text-decoration: none;
+	list-style-position: inside;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+	border-radius: 5px; 
 }
 
 

@@ -112,7 +112,7 @@ def foodresult(request):
             food_search = Food.objects.filter(
                 name__icontains=query_name,
                 brand__icontains=query_brand)
-            food_search = food_search.order_by('name', 'brand')[0].get()
+            food_search = food_search.order_by('name', 'brand')[:1].get()
         except Food.DoesNotExist:
             return None
     # If the user only entered a product name.
@@ -120,21 +120,23 @@ def foodresult(request):
         try:
             food_search = Food.objects.filter(
                 name__icontains=query_name)
-            food_search = food_search.order_by('name')[0].get()
+            food_search = food_search.order_by('name')[:1].get()
         except Food.DoesNotExist:
             return None
 
     # Query expressions to find into the db the substitutes products :
     # same category and better nutrition_grade than the food_search.
+    
+
+
+
+
+
+
     substitutes = Food.objects.filter(
         category=food_search.category,
         nutrition_grade__lt=food_search.nutrition_grade)
     substitutes = substitutes.distinct('name', 'brand')
-
-    # OR
-    # substitutes_cat = Category.objects.get(name=food_search.category)
-    # substitutes = substitutes.cat.food.category.filter(nutrition_grade__lt=food_search.nutrition_grade)
-    # substitutes = substitutes.distinct('name', 'brand')
 
     # Pagination : no more than 6 substitute products in a page.
     paginator = Paginator(substitutes, 6)
@@ -180,6 +182,13 @@ class FoodInfo(DetailView):
 def selection(request):
     """View to the user's personal selection of healthy food."""
 
+
+
+
+
+
+
+
     selected_deleted = False
 
     # If the user wants to delete a selected healthy food from is portofolio
@@ -193,10 +202,20 @@ def selection(request):
     # Getting the list of all the selected healthy foods by the user
     foods_saved = MySelection.objects.filter(user=request.user)
 
+    # Pagination : no more than 6 substitute products in a page.
+    paginator = Paginator(substitutes, 6)
+    page = request.GET.get('page')
+    try:
+        substitutes = paginator.page(page)
+    except PageNotAnInteger:
+        substitutes = paginator.page(1)
+    except EmptyPage:
+        substitutes = paginator.page(paginator.num_pages)
+
     # What to render
     context = {
         'foods_saved': foods_saved,
-        'selected_deleted': selected_deleted
+        'selected_deleted': selected_deleted,
+        'paginate': True
     }
-
     return render(request, 'food/selection.html', context)
