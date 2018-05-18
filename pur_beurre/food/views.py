@@ -179,13 +179,6 @@ class FoodInfo(DetailView):
 def selection(request):
     """View to the user's personal selection of healthy food."""
 
-
-
-
-
-
-
-
     selected_deleted = False
 
     # If the user wants to delete a selected healthy food from is portofolio
