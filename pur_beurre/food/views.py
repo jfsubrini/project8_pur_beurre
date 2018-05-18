@@ -6,7 +6,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User #####
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-# from django.core.exceptions import ObjectDoesNotExist  #####
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView  #### Si on garde la vue générique FoodInfo
 
@@ -127,8 +126,6 @@ def foodresult(request):
     # Query expressions to find into the db the substitutes products :
     # same category and better nutrition_grade than the food_search.
     
-
-
 
 
 

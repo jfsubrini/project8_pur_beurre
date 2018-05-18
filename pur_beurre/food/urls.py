@@ -12,8 +12,8 @@ from . import views
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='food/home.html'), name='home'),
-    path('home/', TemplateView.as_view(template_name='food/home.html'), name='home'),
     path('index/', TemplateView.as_view(template_name='food/home.html'), name='home'),
+    path('home/', TemplateView.as_view(template_name='food/home.html'), name='home'),
     path('account/', views.account, name='account'),
     path('account/register/', views.register, name='register'),
     path('account/signin/', views.signin, name='signin'),
