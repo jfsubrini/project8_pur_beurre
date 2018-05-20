@@ -15,18 +15,18 @@ Program developed by Jean-François Subrini, May 2018.
 
 ## How to use it or get it running ?
 
-* Pur Beurre is a **Python website**, developed with the **Django** framework with a Creative Bootstrap Theme as the frontend.
+* Pur Beurre is a **Python website**, developed with the **Django** framework 2.0, Python 3.6 and PostgreSQL for the backend (see *requirements.txt*), and with a Creative Bootstrap Theme for the frontend.
 
-* You can access the website from your Terminal executing *./manage.py runserver* and watching it from your *localhost:8000* in your favorite browser.
+* You can access the program from your Terminal executing *./manage.py runserver* and watching it from your *localhost:8000* in your favorite browser.
 
 * You can also and more easily go directly online at [Pur Beurre](https://purbeurre8.herokuapp.com/) website, deployed with *Heroku*.
 
 
-## How to update de category and food data ?
+## How to update the category list and food data if running this app with localhost ?
 
 * Pur Beurre has been developped with 10 different categories of food. See the name of these categories in the **CATEGORIES_LIST** (*pur_beurre/food/constants.py*). If you want to change it - add some more or drop ones - just modify that list before running an update. 
 
-* If you change the CATEGORIES_LIST or just want to update your database with the latest food data, you need to run this command from your command line : ***./manage.py off_api***.
+* If you change the CATEGORIES_LIST or just want to **update your database** with the latest food data, you need to run this command from your command line : ***./manage.py off_api***.
 
 
 ***Enjoy it !***
