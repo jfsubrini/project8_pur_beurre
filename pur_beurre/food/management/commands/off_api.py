@@ -11,46 +11,51 @@ all the data needed for the pur_beurre database.
 import requests
 
 # Django imports
+from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction, IntegrityError
 
 # Imports from my app
-from constants import OFF_API_URL, CATEGORIES_LIST
-from models import Food, Category
+from food.constants import OFF_API_URL, CATEGORIES_LIST
+from food.models import Food, Category
 
 
 
-class OpenFoodFactsAPI:
-    """ Class that collects all the data needed for all selected categories
-    from the OpenFoodFacts API.
+class Command(BaseCommand):
+    """
+    Django management class to enable the './manage.py off_api.py' command.
+    This Command class collects and updates all the data needed for all selected categories
+    for the pur_beurre database from the OpenFoodFacts API.
     """
 
-    @transaction.atomic
-    def categories(self):
-        """Method that maintains equivalence between the categories present in the
-        CATEGORIES_LIST and the ones present into the database Category table."""
-        db_actual_cat = Category.objects.values_list('name', flat=True)
-        for list_cat in CATEGORIES_LIST:
-            if list_cat not in db_actual_cat:
-                # Creation of a new category into the database.
-                Category.objects.create(name=list_cat)
-        for db_cat in db_actual_cat:
-            if db_cat not in CATEGORIES_LIST:
-                # Delete of the category presents into the database
-                # but not anymore into the CATEGORIES_LIST.
-                Category.objects.filter(name=db_cat).delete()
+    help = "Met à jour la base de données pur_beurre avec les dernières données d'OpenFoodFacts \n\
+    pour les catégories définies dans constants.py"
 
-    def get_all_data(self):
-        """Request for each food category all the data needed, collecting from
-        the Open Food Facts REST API."""
+
+    def handle(self, *args, **options):
+        """"Handles the process of updating the data into the pur_beurre database.
+        Returns the information when the process is completed.
+        """
+
+        # Introduction message informing on the process.
+        self.stdout.write(self.style.SUCCESS(
+            "Lancement de l'actualisation de la base de données pur_beurre grâce à l'API d'OpenFoodFacts."))
+
+        # First update the categories into the database.
+        self.check_categories()
+
+        # Second for each food category update the food data needed into the database,
+        # collecting the data from the Open Food Facts REST API.
         for category in CATEGORIES_LIST:
-            print("Collecte des informations sur les aliments de la catégorie : \
-                '{}' ...".format(category))
-            """Request to the OFF API to collect data for one category."""
-            payload = {'search_terms': category, 'page_size': 1000, 'json': 1}
-            response = requests.get(OFF_API_URL, params=payload)
-            openfoodfacts = response.json()
+            # Displaying message when new food data from each category is being processing.
+            self.stdout.write(
+                self.style.WARNING("Collecte des informations sur les aliments de la catégorie : \
+                '%s' ..." % category)
+                )
+            # Call to the API to get a json file for each category products.
+            self.off_api_data(category)
+            # Collecting the needed data for each food product.
             j = 0
-            for item in range(0, openfoodfacts['count']-1):                
+            for item in range(0, openfoodfacts['count']-1):
                 # If the product item has these data then collects them all.
                 try:
                     shortcut = openfoodfacts['products'][item]
@@ -63,17 +68,53 @@ class OpenFoodFactsAPI:
                     url = shortcut['url']
                     j += 1
                     # Call to the function that inserts the food values into the database.
-                    InsertAllData.insert(name, brand, category, nutrition_grade, \
+                    self.insert_data(name, brand, category, nutrition_grade, \
                         nutrition_score, url, image_food, image_nutrition, j)
                 except:
                     pass
 
+        # Ending message when the whole update is a success.
+        self.stdout.write(self.style.SUCCESS(
+            "La base de données pur_beurre a bien été mise à jour.\nBon appétit !"))
 
-class InsertAllData(OpenFoodFactsAPI):
-    """ Class that inserts all the data into pur_beurre database.
-    """
 
-    def insert(name, brand, category, nutrition_grade, nutrition_score, \
+    @transaction.atomic
+    def check_categories(self):
+        """Method that maintains equivalence between the categories present in the
+        CATEGORIES_LIST and the ones present into the database Category table."""
+        db_actual_cat = Category.objects.values_list('name', flat=True)
+        for list_cat in CATEGORIES_LIST:
+            if list_cat not in db_actual_cat:
+                # Creation of a new category into the database.
+                try:
+                    Category.objects.create(name=list_cat)
+                except IntegrityError:
+                    self.stdout.write(self.style.WARNING(
+                        "La catégorie {} n'a pas pu être enregistrée dans la base de données.".format(list_cat)))
+
+        for db_cat in db_actual_cat:
+            if db_cat not in CATEGORIES_LIST:
+                # Delete of the category presents into the database
+                # because it's not anymore into the CATEGORIES_LIST.
+                try:
+                    Category.objects.filter(name=db_cat).delete()
+                except IntegrityError:
+                    self.stdout.write(self.style.WARNING(
+                        "La catégorie {} n'a pas pu être supprimée de la base de données.".format(db_cat)))
+
+    def off_api_data(self, category):
+        """Request to the OFF API to collect data for one category."""
+        try:
+            payload = {'search_terms': category, 'page_size': 1000, 'json': 1}
+            response = requests.get(OFF_API_URL, params=payload)
+            openfoodfacts = response.json()
+            return openfoodfacts
+        except:
+            raise CommandError("Problème de connexion avec l'API d'OpenFoodFacts.\n\
+            Vérifiez votre connexion Internet ainsi que la liste des catégories dans constants.py.")
+
+
+    def insert_data(self, name, brand, category, nutrition_grade, nutrition_score, \
         url, image_food, image_nutrition, j):
         """Inserting into the Food table all the data for each new food of one category."""
         try:
@@ -88,22 +129,15 @@ class InsertAllData(OpenFoodFactsAPI):
                     image_food=image_food,
                     image_nutrition=image_nutrition)
                 # Prints for the console
-                print("Nom : {}".format(name))
-                print("Marque : {}".format(brand))
-                print("Image de l'aliment : {}".format(image_food))
-                print("Image repères nutritionnels : {}".format(image_nutrition))
-                print("Nutriscore : {}".format(nutrition_grade))
-                print("Autre nutriscore : {}".format(nutrition_score))
-                print("URL fiche aliment : {}".format(url))
-                print("Catégorie : {}".format(category))
-                print("N° de l'aliment : {}\n".format(j))
+                self.stdout.write("Nom : {}".format(name))
+                self.stdout.write("Marque : {}".format(brand))
+                self.stdout.write("Image de l'aliment : {}".format(image_food))
+                self.stdout.write("Image repères nutritionnels : {}".format(image_nutrition))
+                self.stdout.write("Nutriscore : {}".format(nutrition_grade))
+                self.stdout.write("Autre nutriscore : {}".format(nutrition_score))
+                self.stdout.write("URL fiche aliment : {}".format(url))
+                self.stdout.write("Catégorie : {}".format(category))
+                self.stdout.write("N° de l'aliment : {}\n".format(j))
         except IntegrityError:
-                print("Problème : {} n'a pas pu être enregistré dans la base de données.".format(name))
-
-
-
-instance = OpenFoodFactsAPI()
-instance.categories()
-instance.get_all_data()
-
-print("La base de données pur_beurre a bien été mise à jour.\nBon appétit !")
+            self.stdout.write(self.style.WARNING(
+                "Problème : {} n'a pas pu être enregistré dans la base de données.".format(name)))
