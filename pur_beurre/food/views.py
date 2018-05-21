@@ -125,11 +125,8 @@ def foodresult(request):
 
     # Query expressions to find into the db the substitutes products :
     # same category and better nutrition_grade than the food_search.
-    
 
-
-
-
+    ## A REVOIR ###
     substitutes = Food.objects.filter(
         category=food_search.category,
         nutrition_grade__lt=food_search.nutrition_grade)

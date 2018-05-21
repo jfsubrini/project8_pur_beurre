@@ -120,7 +120,6 @@ class Command(BaseCommand):
                 """)
 
 
-    @transaction.atomic  #### marche pas avec ça, et sans ne marche que le stdout.write et pas le create
     def insert_data(self, name, brand, category, nutrition_grade, \
         nutrition_score, url, image_food, image_nutrition, j):
         """Inserting into the Food table all the data for each new food of one category."""
@@ -134,7 +133,8 @@ class Command(BaseCommand):
                     nutrition_score=nutrition_score,
                     url=url,
                     image_food=image_food,
-                    image_nutrition=image_nutrition)
+                    image_nutrition=image_nutrition
+                    )
                 # Prints for the Console Command Line
                 self.stdout.write("Nom : {}".format(name))
                 self.stdout.write("Marque : {}".format(brand))
