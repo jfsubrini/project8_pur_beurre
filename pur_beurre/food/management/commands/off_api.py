@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Module that uses the OpenFoodFacts API to collect
-all the data needed for the pur_beurre database.
+Module that uses the OpenFoodFacts API to collect all the data needed
+for the pur_beurre database, the first time and for updates.
 """
 
 
@@ -38,21 +38,23 @@ class Command(BaseCommand):
 
         # Introduction message informing on the process.
         self.stdout.write(self.style.SUCCESS(
-            "Lancement de l'actualisation de la base de données pur_beurre grâce à l'API d'OpenFoodFacts."))
+            "\nLancement de l'actualisation de la base de données pur_beurre grâce à l'API d'OpenFoodFacts.\n"))
 
         # First update the categories into the database.
         self.check_categories()
+        self.stdout.write(self.style.SUCCESS(
+            "Mise à jour des catégories d'aliments en fonction de la liste établie.\n"))
 
         # Second for each food category update the food data needed into the database,
         # collecting the data from the Open Food Facts REST API.
         for category in CATEGORIES_LIST:
             # Displaying message when new food data from each category is being processing.
             self.stdout.write(
-                self.style.WARNING("Collecte des informations sur les aliments de la catégorie : \
-                '%s' ..." % category)
+                self.style.WARNING(
+                    "Collecte des informations sur les aliments de la catégorie : '%s' ..." % category)
                 )
             # Call to the API to get a json file for each category products.
-            self.off_api_data(category)
+            openfoodfacts = self.off_api_data(category)
             # Collecting the needed data for each food product.
             j = 0
             for item in range(0, openfoodfacts['count']-1):
@@ -75,7 +77,7 @@ class Command(BaseCommand):
 
         # Ending message when the whole update is a success.
         self.stdout.write(self.style.SUCCESS(
-            "La base de données pur_beurre a bien été mise à jour.\nBon appétit !"))
+            "\nLa base de données pur_beurre a bien été mise à jour.\nBon appétit !\n"))
 
 
     @transaction.atomic
@@ -102,6 +104,7 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.WARNING(
                         "La catégorie {} n'a pas pu être supprimée de la base de données.".format(db_cat)))
 
+
     def off_api_data(self, category):
         """Request to the OFF API to collect data for one category."""
         try:
@@ -110,34 +113,38 @@ class Command(BaseCommand):
             openfoodfacts = response.json()
             return openfoodfacts
         except:
-            raise CommandError("Problème de connexion avec l'API d'OpenFoodFacts.\n\
-            Vérifiez votre connexion Internet ainsi que la liste des catégories dans constants.py.")
+            raise CommandError("""
+                Problème de connexion avec l'API d'OpenFoodFacts.
+                Vérifiez votre connexion Internet
+                ainsi que la liste des catégories dans constants.py.
+                """)
 
 
-    def insert_data(self, name, brand, category, nutrition_grade, nutrition_score, \
-        url, image_food, image_nutrition, j):
+    @transaction.atomic  #### marche pas avec ça, et sans ne marche que le stdout.write et pas le create
+    def insert_data(self, name, brand, category, nutrition_grade, \
+        nutrition_score, url, image_food, image_nutrition, j):
         """Inserting into the Food table all the data for each new food of one category."""
         try:
             with transaction.atomic():
                 Food.objects.create(
-                    name=name,
-                    brand=brand,
+                    name=name.lower().capitalize(),
+                    brand=brand.lower().capitalize(),
                     category=Category.objects.get(name=category),
                     nutrition_grade=nutrition_grade,
                     nutrition_score=nutrition_score,
                     url=url,
                     image_food=image_food,
                     image_nutrition=image_nutrition)
-                # Prints for the console
+                # Prints for the Console Command Line
                 self.stdout.write("Nom : {}".format(name))
                 self.stdout.write("Marque : {}".format(brand))
                 self.stdout.write("Image de l'aliment : {}".format(image_food))
                 self.stdout.write("Image repères nutritionnels : {}".format(image_nutrition))
                 self.stdout.write("Nutriscore : {}".format(nutrition_grade))
-                self.stdout.write("Autre nutriscore : {}".format(nutrition_score))
+                self.stdout.write("Nutriscore numérique : {}".format(nutrition_score))
                 self.stdout.write("URL fiche aliment : {}".format(url))
                 self.stdout.write("Catégorie : {}".format(category))
-                self.stdout.write("N° de l'aliment : {}\n".format(j))
+                self.stdout.write("N° de l'aliment : {}\n\n".format(j))
         except IntegrityError:
             self.stdout.write(self.style.WARNING(
                 "Problème : {} n'a pas pu être enregistré dans la base de données.".format(name)))

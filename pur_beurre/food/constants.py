@@ -16,5 +16,5 @@ CATEGORIES_LIST = [
     'Petit-déjeuners',
     'Salades composées',
     'Sandwichs',
-    'Tartes'
+    'Tartes',
     ]
