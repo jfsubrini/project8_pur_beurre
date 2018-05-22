@@ -51,7 +51,7 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="food_id" value="{{ substitute.food_id }}">
-                <figcaption class="save"><button><span class="fa fa-save fa-lg"> Sauvegarder</span></button></figcaption> <!-- button ?!? -->
+                <figcaption class="save"><button><span class="fa fa-save fa-lg"> Sauvegarder</span></button></figcaption>
               </form>
             {% endif %}
           </figure>
@@ -70,6 +70,19 @@
     </div>
   </div>
 </section>
+
+  <!-- Saved food confirmation message -->
+  {% if user.is_authenticated %}
+     {% if food_selected %}
+        <h3>Cet aliment vient d'être rajouté à votre portefeuille de produits sains.</h3>
+    <!-- <script>alert("Cet aliment vient d'être rajouté à votre portefeuille de produits sains.");</script>
+     -->  
+    {% elif food_selected is False %}
+        <h3>Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.</h3>
+    <!-- <script>alert("Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.");</script>
+ -->
+    {% endif %}
+  {% endif %}
 
   <!-- Pagination -->
   {% if paginate %}
