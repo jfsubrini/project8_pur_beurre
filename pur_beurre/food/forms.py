@@ -1,4 +1,4 @@
-"""Forms to create the user account and for the sign in."""
+"""Creation of the user account form."""
 
 
 # Django imports
@@ -36,18 +36,3 @@ class ValidationErrorList(ErrorList):
         if not self:
             return ''
         return ''.join([e for e in self])
-
-
-class ConnexionForm(ModelForm):
-    """Form for the sign in, based on the Django User model."""
-
-    class Meta:
-        """Details of the sign in form and attributes settings for CSS."""
-        model = User
-        fields = ['username', 'password']
-        widgets = {
-            'username': TextInput(attrs={'class': 'form-control form-control-lg', \
-                'id': 'username', 'placeholder': 'Entrez votre nom d\'utilisateur'}),
-            'password': PasswordInput(attrs={'class': 'form-control form-control-lg', \
-                'id': 'inputPassword', 'placeholder': 'Entrez votre mot de passe'})
-        }

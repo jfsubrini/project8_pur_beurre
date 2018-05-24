@@ -141,6 +141,10 @@ STATIC_URL = '/static/'
 INTERNAL_IPS = ['127.0.0.1']
 
 
+# Redirection url when logged in
+LOGIN_REDIRECT_URL = '/account/'
+
+
 if os.environ.get('ENV') == 'PRODUCTION':
 
     # Static files settings

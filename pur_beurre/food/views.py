@@ -12,7 +12,7 @@ from django.views.generic.detail import DetailView  ## Si on garde la vue géné
 
 # Imports from my app
 from .models import NutritionGrade, Category, Food, MySelection  ## Nutri & Cat unused ?
-from .forms import AccountForm, ValidationErrorList, ConnexionForm
+from .forms import AccountForm, ValidationErrorList  ## Viré ConnexionForm
 
 
 
@@ -23,11 +23,10 @@ def register(request):
     if request.method == "POST":
         form = AccountForm(request.POST, error_class=ValidationErrorList)
         if form.is_valid():
-            # form.save() ###
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = User.objects.create_user(username, email, password) ###
+            user = User.objects.create_user(username, email, password)
             user = authenticate(request, username=username, email=email, password=password)
             # If data are valid, automatic log in and redirection to 'Mon Compte' page.
             login(request, user)
@@ -50,46 +49,6 @@ def account(request):
     return render(request, 'food/account.html')
 
 
-####### CONNEXION #######
-def signin(request):
-    """View to the log in page."""
-    signin_failed = False
-
-    # In case the user is already logged in, redirection to homepage.
-    if request.user.is_authenticated:
-        return redirect('home')
-
-    # Analysis and treatment of the sign in form that has been sent.
-    if request.method == "POST":
-        form = ConnexionForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user = authenticate(request, username=username, password=password)
-            # If the connexion is valid, log in and redirection to 'Mon Compte' page.
-            if user is not None:
-                login(request, user)
-                return redirect('account')
-            else:
-                signin_failed = True
-    else:
-        form = ConnexionForm()
-
-    # What to render to the template.
-    context = {
-        'form': form,
-        'signin_failed': signin_failed
-        }
-    return render(request, 'food/signin.html', context)
-
-
-####### DECONNEXION #######
-def signout(request):
-    """Log out function with redirection to homepage."""
-    logout(request)
-    return redirect('home')
-
-
 ####### RESULTATS DE LA RECHERCHE #######
 def foodresult(request):
     """View to the page that displays all the substitute food products
@@ -103,8 +62,12 @@ def foodresult(request):
     # Parsing of the query to better find the query product
     # into the database, searching by name AND brand, if informed by the user.
     query = query.split(',')
-    query_name = query[0].strip()
-    query_brand = query[1].strip()
+    try:
+        query_name = query[0].strip().lower().capitalize()
+        query_brand = query[1].strip().lower().capitalize()
+    except IndexError:
+        query_name = query[0].strip().lower().capitalize()
+        query_brand = None
 
     ##########    DISPLAY SUBSTITUTE FOODS   ##########
     # If the user entered a product name AND a product brand (after the comma).
@@ -115,7 +78,7 @@ def foodresult(request):
                 brand__icontains=query_brand)
             food_search = food_search.order_by('name', 'brand')[:1].get()
         except Food.DoesNotExist:
-            return None
+            return "Rien" # None
     # If the user only entered a product name.
     elif query_name:
         try:
@@ -123,7 +86,7 @@ def foodresult(request):
                 name__icontains=query_name)
             food_search = food_search.order_by('name')[:1].get()
         except Food.DoesNotExist:
-            return None
+            return "Rien seul" # None
     # Query expressions to find into the database the substitutes products
     # with the same category and better nutrition_grade than the food_search.
     substitutes = Food.objects.filter(
@@ -133,6 +96,7 @@ def foodresult(request):
 
     ##########      SAVE AN HEALTHY FOOD     ##########
     # If the user wants to save an healthy food for is portfolio.
+    food_selected = False
     if request.user.is_authenticated and request.method == 'POST':
         food_saved = request.POST.get('food_id')
         food_saved = Food.objects.filter(id=food_saved)
@@ -147,21 +111,21 @@ def foodresult(request):
             food_selected = True
 
     # Pagination : no more than 6 substitute products in a page.
-    paginator = Paginator(substitutes, 6)
-    page = request.GET.get('page')
-    try:
-        substitutes = paginator.page(page)
-    except PageNotAnInteger:
-        substitutes = paginator.page(1)
-    except EmptyPage:
-        substitutes = paginator.page(paginator.num_pages)
+    # paginator = Paginator(substitutes, 6)
+    # page = request.GET.get('page')
+    # try:
+    #     substitutes = paginator.page(page)
+    # except PageNotAnInteger:
+    #     substitutes = paginator.page(1)
+    # except EmptyPage:
+    #     substitutes = paginator.page(paginator.num_pages)
 
     # What to render to the template.
     context = {
         'food_search': food_search,
         'substitutes': substitutes,
         'food_selected': food_selected,
-        'paginate': True
+        # 'paginate': True
     }
     return render(request, 'food/foodresult.html', context)
 

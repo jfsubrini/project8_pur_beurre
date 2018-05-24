@@ -16,7 +16,7 @@ from django.db import transaction, IntegrityError
 
 # Imports from my app
 from food.constants import OFF_API_URL, CATEGORIES_LIST
-from food.models import Food, Category
+from food.models import Food, Category, NutritionGrade
 
 
 
@@ -69,6 +69,17 @@ class Command(BaseCommand):
                     nutrition_score = shortcut['nutriments']['nutrition-score-fr_100g']
                     url = shortcut['url']
                     j += 1
+                    # Converting for EnumChoiceField.
+                    if nutrition_grade == "a":
+                        nutrition_grade = NutritionGrade.a
+                    elif nutrition_grade == "b":
+                        nutrition_grade = NutritionGrade.b
+                    elif nutrition_grade == "c":
+                        nutrition_grade = NutritionGrade.c
+                    elif nutrition_grade == "d":
+                        nutrition_grade = NutritionGrade.d
+                    elif nutrition_grade == "e":
+                        nutrition_grade = NutritionGrade.e
                     # Call to the function that inserts the food values into the database.
                     self.insert_data(name, brand, category, nutrition_grade, \
                         nutrition_score, url, image_food, image_nutrition, j)
