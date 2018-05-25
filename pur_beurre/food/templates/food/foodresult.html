@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-lg-8 mx-auto">
         <img class="img-fluid img_center" src="{{ food_search.image_food }}" alt="{{ food_search.name }}" width="20%">
-        <h1 class="food_name">Aliment cherché : {{ food_search.name|truncatechars:30 }}</h1>
+        <h1 class="food_name">Aliment cherché : {{ food_search.name|truncatechars:40 }}</h1>
       </div>
     </div>
   </div>
@@ -32,9 +32,9 @@
       
       {% for substitute in substitutes %}
       <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="{{ substitute.nutrition_grade }}" href="{{ substitute.image_food }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+        <a class="portfolio-box badge1" data-badge="{{ substitute.nutrition_grade }}" href="{{ substitute.image_food }}">
           <figure>
-            <img class="img-fluid img_center" src="{{ substitute.image_food }}" alt="{{ substitute.name }}" width="100%"><!-- <span class="badge badge-pill badge-success">A</span> -->
+            <img class="img-fluid img_center" src="{{ substitute.image_food }}" alt="{{ substitute.name }}" width="100%">
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
@@ -51,7 +51,7 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="food_id" value="{{ substitute.food_id }}">
-                <figcaption class="save"><button><span class="fa fa-save fa-lg"> Sauvegarder</span></button></figcaption>
+                <figcaption class="save"><button><span class="fa fa-save fa-4"> Sauvegarder</span></button></figcaption>
               </form>
             {% endif %}
           </figure>
@@ -72,28 +72,30 @@
 </section>
 
   <!-- Saved food confirmation message -->
-  {% if user.is_authenticated %}
-     {% if food_selected %}
-        <h3>Cet aliment vient d'être rajouté à votre portefeuille de produits sains.</h3>
-    <!-- <script>alert("Cet aliment vient d'être rajouté à votre portefeuille de produits sains.");</script>
-     -->  
-    {% elif food_selected is False %}
-        <h3>Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.</h3>
-    <!-- <script>alert("Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.");</script>
- -->
-    {% endif %}
+  {% if food_selected %}
+    <script>alert("Cet aliment vient d'être rajouté à votre portefeuille de produits sains.");</script>
+  {% elif not food_selected %}
+    <script>alert("Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.");</script>
   {% endif %}
 
   <!-- Pagination -->
   {% if paginate %}
-    <ul class='pager'>
-      {% if substitutes.has_previous %}
-        <li class='previous'><a href="?page={{ substitutes.previous_page_number }}">Page précédente</a></li>
-      {% endif %}
-      {% if substitutes.has_next %}
-        <li class='next'><a href="?page={{ substitutes.next_page_number }}">Page suivante</a></li>
-      {% endif %}
-    </ul>
+    <nav aria-label="pagination example">
+      <ul class="pagination justify-content-center">
+        <!--Previous button-->
+        {% if substitutes.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ substitutes.previous_page_number }}" tabindex="-1">Page précédente</a>
+        </li>
+        {% endif %}
+        <!--Next button-->
+        {% if substitutes.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ substitutes.next_page_number }}">Page suivante</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
   {% endif %}
 
 {% endblock content %}

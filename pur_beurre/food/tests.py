@@ -140,7 +140,7 @@ class RegisterTestCase(TestCase):
         self.assertRedirects(response, '/account/')
         self.assertEqual(
             User.objects.filter(
-                username=self.username, email=self.email, password=self.password).exists(),
+                username=self.username, email=self.email).exists(),
             True
         )
 
@@ -187,25 +187,15 @@ class SignInTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'food/signin.html')
 
-    def test_already_logged_in(self):
-        """In case the user is already logged in, redirection to homepage.
-        """
-        # The user is logged in.
-        self.client.login(username=self.username, password=self.password)
-        # Testing the access while already logged in.
-        response = self.client.get(reverse('signin'))
-        self.assertRedirects(response, '/home/')
-
     def test_signin_valid(self):
         """Post a valid form from the Sign In page that must return
-        the account page (HTTP 302 url redirection) and the right template.
+        the account page (HTTP 302 url redirection).
         """
         response = self.client.post(reverse('signin'), {
             'username': self.username,
             'password': self.password
         })
         self.assertRedirects(response, '/account/')
-        self.assertTemplateUsed(response, 'food/account.html')
 
     def test_signin_invalid(self):
         """Post an invalid form from the Sign In page that must return
@@ -458,9 +448,10 @@ class SignOutTestCase(TestCase):
         """
         # The user is logged in.
         self.client.login(username=self.username, password=self.password)
-        # Testing the log out and the redirection (HTTP 302) to the homepage.
+        # Testing the log out with the return HTTP 200 and the display of the homepage template.
         response = self.client.get(reverse('signout'))
-        self.assertRedirects(response, '/home/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'food/home.html')
 
 
 ################################################################

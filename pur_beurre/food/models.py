@@ -46,7 +46,6 @@ class Food(models.Model):
         """Each (name + brand) item must be unique."""
         verbose_name = "aliment"
         unique_together = ("name", "brand")
-        ordering = ['nutrition_grade', 'nutrition_score']
 
     def __str__(self):
         return '%s %s' % (self.name, self.brand)

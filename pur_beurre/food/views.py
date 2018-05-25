@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404, redirect  ## get_ if foodinfo not generic
 from django.views.generic.detail import DetailView  ## Si on garde la vue générique FoodInfo
+from django.http import Http404
 
 
 # Imports from my app
@@ -75,24 +76,27 @@ def foodresult(request):
         try:
             food_search = Food.objects.filter(
                 name__icontains=query_name,
-                brand__icontains=query_brand)
-            food_search = food_search.order_by('name', 'brand')[:1].get()
+                brand__icontains=query_brand)[:1].get()
         except Food.DoesNotExist:
-            return "Rien" # None
+            raise Http404("Votre requête ne permet pas de récupérer un aliment dans notre base de données.\nEssayez une autre requête.")
     # If the user only entered a product name.
     elif query_name:
         try:
             food_search = Food.objects.filter(
-                name__icontains=query_name)
-            food_search = food_search.order_by('name')[:1].get()
+                name__icontains=query_name)[:1].get()
         except Food.DoesNotExist:
-            return "Rien seul" # None
-    # Query expressions to find into the database the substitutes products
+            raise Http404("Votre requête ne permet pas de récupérer un aliment dans notre base de données.\nEssayez une autre requête.")
+    # Query expression to find into the database the substitutes products
     # with the same category and better nutrition_grade than the food_search.
-    substitutes = Food.objects.filter(
-        category=food_search.category,
-        nutrition_grade__lt=food_search.nutrition_grade)
-    substitutes = substitutes.distinct('name', 'brand')
+    substitutes = {}
+    try:
+        substitutes = Food.objects.filter(
+            category=food_search.category,
+            nutrition_grade__lt=food_search.nutrition_grade)
+        substitutes = substitutes.distinct('name', 'brand')
+    # substitutes = substitutes.order_by('nutrition_grade', 'nutrition_score') ## TROUVER DE QUOI TRIER
+    except:
+        return substitutes
 
     ##########      SAVE AN HEALTHY FOOD     ##########
     # If the user wants to save an healthy food for is portfolio.
@@ -111,21 +115,21 @@ def foodresult(request):
             food_selected = True
 
     # Pagination : no more than 6 substitute products in a page.
-    # paginator = Paginator(substitutes, 6)
-    # page = request.GET.get('page')
-    # try:
-    #     substitutes = paginator.page(page)
-    # except PageNotAnInteger:
-    #     substitutes = paginator.page(1)
-    # except EmptyPage:
-    #     substitutes = paginator.page(paginator.num_pages)
+    paginator = Paginator(substitutes, 6)
+    page = request.GET.get('page')
+    try:
+        substitutes = paginator.page(page)
+    except PageNotAnInteger:
+        substitutes = paginator.page(1)
+    except EmptyPage:
+        substitutes = paginator.page(paginator.num_pages)
 
     # What to render to the template.
     context = {
         'food_search': food_search,
         'substitutes': substitutes,
         'food_selected': food_selected,
-        # 'paginate': True
+        'paginate': True,
     }
     return render(request, 'food/foodresult.html', context)
 
