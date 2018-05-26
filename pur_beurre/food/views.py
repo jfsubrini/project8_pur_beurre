@@ -2,18 +2,18 @@
 
 
 # Django imports
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, get_object_or_404, redirect  ## get_ if foodinfo not generic
-from django.views.generic.detail import DetailView  ## Si on garde la vue générique FoodInfo
+from django.shortcuts import render, redirect
+from django.views.generic.detail import DetailView
 from django.http import Http404
 
 
 # Imports from my app
-from .models import NutritionGrade, Category, Food, MySelection  ## Nutri & Cat unused ?
-from .forms import AccountForm, ValidationErrorList  ## Viré ConnexionForm
+from .models import Food, MySelection
+from .forms import AccountForm, ValidationErrorList
 
 
 
@@ -78,14 +78,20 @@ def foodresult(request):
                 name__icontains=query_name,
                 brand__icontains=query_brand)[:1].get()
         except Food.DoesNotExist:
-            raise Http404("Votre requête ne permet pas de récupérer un aliment dans notre base de données.\nEssayez une autre requête.")
+            raise Http404(
+                """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
+                Essayez une autre requête."""
+                )
     # If the user only entered a product name.
     elif query_name:
         try:
             food_search = Food.objects.filter(
                 name__icontains=query_name)[:1].get()
         except Food.DoesNotExist:
-            raise Http404("Votre requête ne permet pas de récupérer un aliment dans notre base de données.\nEssayez une autre requête.")
+            raise Http404(
+                """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
+                Essayez une autre requête."""
+                )
     # Query expression to find into the database the substitutes products
     # with the same category and better nutrition_grade than the food_search.
     substitutes = {}
@@ -93,17 +99,18 @@ def foodresult(request):
         substitutes = Food.objects.filter(
             category=food_search.category,
             nutrition_grade__lt=food_search.nutrition_grade)
-        substitutes = substitutes.distinct('name', 'brand')
-    # substitutes = substitutes.order_by('nutrition_grade', 'nutrition_score') ## TROUVER DE QUOI TRIER
-    except:
+        substitutes = substitutes.order_by('nutrition_grade', 'nutrition_score')
+    except Food.DoesNotExist:
         return substitutes
 
     ##########      SAVE AN HEALTHY FOOD     ##########
     # If the user wants to save an healthy food for is portfolio.
     food_selected = False
+    posted = False
     if request.user.is_authenticated and request.method == 'POST':
-        food_saved = request.POST.get('food_id')
-        food_saved = Food.objects.filter(id=food_saved)
+        posted = True
+        food_saved = request.POST.get('substitute')
+        food_saved = Food.objects.filter(id=food_saved)[:1]
         # Verify if this food has been already selected by the user.
         verify = MySelection.objects.filter(my_healthy_foods=food_saved, user=request.user)
         # The case that the food has been already selected by the user.
@@ -111,7 +118,9 @@ def foodresult(request):
             food_selected = False
         # The case it's a new selected food by the user.
         else:
-            MySelection.objects.create(my_healthy_foods=food_saved[0], user=request.user)
+            MySelection.objects.create(
+                my_healthy_foods=Food.objects.healthy_foods_selection.filter(food_saved[0]), user=request.user)
+                ######## a revoir my_healthy_foods=Food.objects.healthy_foods_selection.filter(food_saved[0])
             food_selected = True
 
     # Pagination : no more than 6 substitute products in a page.
@@ -129,6 +138,7 @@ def foodresult(request):
         'food_search': food_search,
         'substitutes': substitutes,
         'food_selected': food_selected,
+        'posted': posted,
         'paginate': True,
     }
     return render(request, 'food/foodresult.html', context)
@@ -160,8 +170,9 @@ def selection(request):
     """View to the user's personal selection of healthy food.
     Possibility to delete a selected product."""
 
-    # Getting the list of all the selected healthy foods by the user.
+    # Getting the list of all the selected healthy foods by the user, order by categories.
     foods_saved = MySelection.objects.filter(user=request.user)
+    foods_saved = foods_saved.order_by('category')
 
     # If the user wants to delete a selected healthy food from is portfolio.
     selected_deleted = False
@@ -172,15 +183,15 @@ def selection(request):
             food_saved_delete.delete()
             selected_deleted = True
 
-    # Pagination : no more than 6 substitute products in a page.
-    paginator = Paginator(substitutes, 6)
+    # Pagination : no more than 6 saved products in a page.
+    paginator = Paginator(foods_saved, 6)
     page = request.GET.get('page')
     try:
-        substitutes = paginator.page(page)
+        foods_saved = paginator.page(page)
     except PageNotAnInteger:
-        substitutes = paginator.page(1)
+        foods_saved = paginator.page(1)
     except EmptyPage:
-        substitutes = paginator.page(paginator.num_pages)
+        foods_saved = paginator.page(paginator.num_pages)
 
     # What to render to the template.
     context = {

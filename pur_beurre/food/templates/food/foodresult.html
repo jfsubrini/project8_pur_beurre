@@ -28,7 +28,7 @@
 <!-- Showing the substitute products, maximum 6 by page -->
 <section class="p-0">
   <div class="container">
-    <div class="row popup-gallery pad_items">
+    <div class="row pad_items"><!-- enlevé la classe popup-gallery -->
       
       {% for substitute in substitutes %}
       <div class="col-md-4 col-xs-12">
@@ -50,7 +50,7 @@
             {% if user.is_authenticated %}
               <form method="post">
                 {% csrf_token %}
-                <input type="hidden" name="food_id" value="{{ substitute.food_id }}">
+                <input type="hidden" name="substitute" value="{{ substitute.id }}">
                 <figcaption class="save"><button><span class="fa fa-save fa-4"> Sauvegarder</span></button></figcaption>
               </form>
             {% endif %}
@@ -74,7 +74,7 @@
   <!-- Saved food confirmation message -->
   {% if food_selected %}
     <script>alert("Cet aliment vient d'être rajouté à votre portefeuille de produits sains.");</script>
-  {% elif not food_selected %}
+  {% elif posted and not food_selected %}
     <script>alert("Vous avez déjà sélectionné cet aliment qui figure dans votre portefeuille de produits sains.");</script>
   {% endif %}
 

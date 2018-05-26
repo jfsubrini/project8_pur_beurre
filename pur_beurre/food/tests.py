@@ -210,6 +210,34 @@ class SignInTestCase(TestCase):
 
 
 ################################################################
+#                          DECONNEXION                         #
+################################################################
+
+class SignOutTestCase(TestCase):
+    """
+    Testing the Sign Out process.
+    """
+
+    def setUp(self):
+        """Data samples to run the tests.
+        """
+        self.username = 'jeanfrancois'
+        self.email = 'jfsubrini@yahoo.com'
+        self.password = 'monsupermotdepasse'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
+
+    def test_signout(self):
+        """The user is already logged in and wants to log out.
+        """
+        # The user is logged in.
+        self.client.login(username=self.username, password=self.password)
+        # Testing the log out with the return HTTP 200 and the display of the homepage template.
+        response = self.client.get(reverse('signout'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'food/home.html')
+
+
+################################################################
 #                           RESULTATS                          #
 ################################################################
 
@@ -218,45 +246,42 @@ class FoodResultTestCase(TestCase):
     Testing the Food Result page.
     """
 
-# def setUp(self):
-#         """Data samples to run the tests.
-#         """
-#         self.username = 'jeanfrancois'
-#         self.email = 'jfsubrini@yahoo.com'
-#         self.password = 'monsupermotdepasse'
-#         self.user = User.objects.create_user(self.username, self.email, self.password)
+    def setUp(self):
+        """Data samples to run the tests.
+        """
+        self.username = 'jeanfrancois'
+        self.email = 'jfsubrini@yahoo.com'
+        self.password = 'monsupermotdepasse'
+        self.user = User.objects.create_user(self.username, self.email, self.password)
 
-#         # Sample of food data.
-#         food = {
-#             'id_food': '3017620429484',
-#             'name': 'Nutella',
-#             'brand': 'Ferrero',
-#             'category': 6,
-#             'nutrition_grade': 'E',
-#             'nutrition_score': 26,
-#             'url': 'https://fr.openfoodfacts.org/produit/3017620429484/nutella-ferrero',
-#             'image_food': '???',
-#             'image_nutrition': '???',
-#             'category': Category.objects.create(name="Pâte à tartiner")
-#         }
-#         nutella = Food.objects.create(**food)
-#         food.save()
-#         self.food = food
-
-#         # Sample of substitute food data.
-#         substitute = {
-#             'id_dish': '???',
-#             'name': "Pâte à tartiner",
-#             'url': "???",
-#             'grade': "???",
-#             'pic': "???",
-#             "category": self.dish.category
-#         }
-#         substitute = Food.objects.create(**substitute)
-#         substitute.save()
-#         self.substitute = substitute
-
-##### Connexion avec et sans log in  #######
+        # Sample of origin (Nutella) and substitute (Gerblé) foods data in a category.
+        category = Category.objects.create(name="Pâte à tartiner")
+        nutella = {
+            'id': '312',
+            'name': 'Nutella',
+            'brand': 'Ferrero',
+            'category': Category.objects.get(name=category),
+            'nutrition_grade': NutritionGrade.e,
+            'nutrition_score': 26,
+            'url': 'https://fr.openfoodfacts.org/produit/3017620429484/nutella-ferrero',
+            'image_food': 'https://blablanut',
+            'image_nutrition': 'https://blablablanut',
+        }
+        nutella = Food.objects.create(**nutella)
+        self.nutella = nutella
+        gerble = {
+            'id': '3178',
+            'name': 'Pâte à tartiner - Gerblé - 220g',
+            'brand': 'Gerblé, Glucoregul',
+            'category': self.nutella.category,
+            'nutrition_grade': NutritionGrade.a,
+            'nutrition_score': -4,
+            'url': 'https://fr.openfoodfacts.org/produit/3175681105393/pate-a-tartiner-gerble',
+            'image_food': 'https://blabla',
+            'image_nutrition': 'https://blablabla',
+        }
+        gerble = Food.objects.create(**gerble)
+        self.gerble = gerble
 
     def test_foodresult_valid(self):
         """Accessing the foodresult page while the user query is valid.
@@ -274,6 +299,7 @@ class FoodResultTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
+################# A REVOIR LE FOODRESULT SAVE ET NOT SAVED ########################
     def test_foodresult_save(self):
         """Saving a substitute food into MySelection table
         while the user is logged in.
@@ -310,6 +336,53 @@ class FoodResultTestCase(TestCase):
             False
         )
 
+################################################################
+#                         PAGE ALIMENT                         #
+################################################################
+
+class FoodInfoTestCase(TestCase):
+    """
+    Testing the Food Info page.
+    """
+
+    def setUp(self):
+        """Data sample to run the tests.
+        """
+        
+        # Sample of a substitute (Gerblé) food data.
+        category = Category.objects.create(name="Pâte à tartiner")
+        gerble = {
+            'id': '3178',
+            'name': 'Pâte à tartiner - Gerblé - 220g',
+            'brand': 'Gerblé, Glucoregul',
+            'category': Category.objects.get(name=category),
+            'nutrition_grade': NutritionGrade.a,
+            'nutrition_score': -4,
+            'url': 'https://fr.openfoodfacts.org/produit/3175681105393/pate-a-tartiner-gerble',
+            'image_food': 'https://blabla',
+            'image_nutrition': 'https://blablabla',
+        }
+        gerble = Food.objects.create(**gerble)
+        self.gerble = gerble
+
+    def test_foodinfo_200(self):
+        """Connexion to the FoodInfo page that must return HTTP 200
+        if the pk exists (food id). Returns the right template.
+        """
+        pk = self.gerble.id
+        response = self.client.get(reverse('foodinfo', args=(pk,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'food/foodinfo.html')
+
+    def test_foodinfo_404(self):
+        """Connexion to the FoodInfo page that must return HTTP 404
+        if the pk doesn't exist (food id). Returns the 404 page.
+        """
+        pk = 0
+        response = self.client.get(reverse('foodinfo', args=(pk,)))
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
 
 ################################################################
 #                         MES ALIMENTS                         #
@@ -328,35 +401,25 @@ class SelectionTestCase(TestCase):
         self.password = 'monsupermotdepasse'
         self.user = User.objects.create_user(self.username, self.email, self.password)
 
-        # Sample of category and food data.
-        category = Category.objects.create(name="Pâtes à tartiner")
-
-        # food = {
-        #     'food_id': '3333',
-        #     'name': 'Nutella',
-        #     'brand': 'Ferrero',
-        #     'category': 6,
-        #     'nutrition_grade': 'E',
-        #     'nutrition_score': 26,
-        #     'url': 'https://fr.openfoodfacts.org/produit/3017620429484/nutella-ferrero',
-        #     'image_food': 'https://static.openfoodfacts.org/images/products/301/762/042/9484/front_fr.147.400.jpg',
-        #     'image_nutrition': 'https://static.openfoodfacts.org/images/products/301/762/042/9484/nutrition_fr.106.400.jpg',
-        # }
-        food = {
-            'food_id': '3333',
-            'name': "Purée crue noisette",
-            'brand': "Perl'Amande",
-            'category': Category.objects.get(name=category),  ### NON
-            'nutrition_grade': 'C',
-            'nutrition_score': 7,
-            'url': 'https://fr.openfoodfacts.org/produit/3267110001038/puree-crue-noisette-perl-amande',
-            'image_food': 'https://static.openfoodfacts.org/images/products/326/711/000/1038/front_fr.17.400.jpg',
-            'image_nutrition': 'https://static.openfoodfacts.org/images/products/326/711/000/1038/nutrition_fr.18.400.jpg',
+        # Sample of a selection of one saved food (Gerblé).
+        category = Category.objects.create(name="Pâte à tartiner")
+        gerble = {
+            'id': '3178',
+            'name': 'Pâte à tartiner - Gerblé - 220g',
+            'brand': 'Gerblé, Glucoregul',
+            'category': Category.objects.get(name=category),
+            'nutrition_grade': NutritionGrade.a,
+            'nutrition_score': -4,
+            'url': 'https://fr.openfoodfacts.org/produit/3175681105393/pate-a-tartiner-gerble',
+            'image_food': 'https://blabla',
+            'image_nutrition': 'https://blablabla',
         }
-        puree_noisette = Food.objects.create(**food)
-        
-        # puree_noisette as a selected food by the user.
-        self.food = MySelection.objects.create(puree_noisette)
+        gerble = Food.objects.create(**gerble)
+        self.gerble = gerble
+
+        # Gerblé food as a saved food by the user.
+        self.saved_food = MySelection.objects.create(
+            my_healthy_foods=healthy_foods_selection(self.gerble), user=self.user) ### PB avec my_healthy_foods=...
 
     def test_selection_logged_in(self):
         """Connexion to the Selection page that must return HTTP 200,
@@ -366,7 +429,7 @@ class SelectionTestCase(TestCase):
         self.client.login(username=self.username, password=self.password)
         # Testing the access while logged in.
         response = self.client.get(
-            reverse('selection', args=(self.food.id,))
+            reverse('selection', args=(self.saved_food.id,))
             )
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'food/selection.html')
@@ -376,7 +439,7 @@ class SelectionTestCase(TestCase):
         HTTP 302, redirection to the Sign In page.
         """
         response = self.client.get(
-            reverse('selection', args=(self.food.id,))
+            reverse('selection', args=(self.saved_food.id,))
             )
         self.assertRedirects(
             response, (reverse('signin'))+'?redirection_vers='+(reverse('selection')))
@@ -390,69 +453,12 @@ class SelectionTestCase(TestCase):
             )
         self.assertEqual(response.status_code, 200)
 
-
-################################################################
-#                         PAGE ALIMENT                         #
-################################################################
-
-class FoodInfoTestCase(TestCase):
-    """
-    Testing the Food Info page.
-    """
-
-    def setUp(self):
-        """Data sample to run the tests.
+    def test_selection_delete(self):
+        """Delete a saved product of the Selection page that must return HTTP 200,
+        an update template and delete that food into the MySelection table.
         """
-        nutella = Food.objects.create(name='Nutella')
-        self.food = Food.objects.get(name='Nutella')
-
-    def test_foodinfo_200(self):
-        """Connexion to the FoodInfo page that must return HTTP 200
-        if the pk exists (food id). Returns the right template.
-        """
-        pk = self.pk
-        response = self.client.get(reverse('foodinfo', args=(pk)))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'food/foodinfo.html')
-
-    def test_foodinfo_404(self):
-        """Connexion to the FoodInfo page that must return HTTP 404
-        if the pk doesn't exist (food id). Returns the 404 page.
-        """
-        pk = 0
-        response = self.client.get(reverse('foodinfo', args=(pk)))
-        self.assertEqual(response.status_code, 404)
-        self.assertTemplateUsed(response, '404.html')
-
-##### connexion sans log in et avec à food info ? #######
-
-################################################################
-#                          DECONNEXION                         #
-################################################################
-
-class SignOutTestCase(TestCase):
-    """
-    Testing the Sign Out process.
-    """
-
-    def setUp(self):
-        """Data samples to run the tests.
-        """
-        self.username = 'jeanfrancois'
-        self.email = 'jfsubrini@yahoo.com'
-        self.password = 'monsupermotdepasse'
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
-    def test_signout(self):
-        """The user is already logged in and wants to log out.
-        """
-        # The user is logged in.
-        self.client.login(username=self.username, password=self.password)
-        # Testing the log out with the return HTTP 200 and the display of the homepage template.
-        response = self.client.get(reverse('signout'))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'food/home.html')
-
+        pass
+        ## A FAIRE ##
 
 ################################################################
 #  OPEN FOOD FACTS API - POPULATION OF THE PUR_BEURRE DATABASE #
