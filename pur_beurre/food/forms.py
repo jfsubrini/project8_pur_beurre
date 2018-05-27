@@ -3,10 +3,7 @@
 
 # Django imports
 from django.forms import ModelForm, TextInput, EmailInput, PasswordInput
-from django.forms.utils import ErrorList
-
 from django.contrib.auth.models import User
-
 
 
 
@@ -25,14 +22,3 @@ class AccountForm(ModelForm):
             'password': PasswordInput(attrs={'class': 'form-control form-control-lg', \
                 'id': 'inputPassword', 'placeholder': 'Entrez votre mot de passe'})
         }
-
-
-class ValidationErrorList(ErrorList):
-    """Function to manage the validation errors in the forms."""
-    def __str__(self):
-        return self.as_divs()
-
-    def as_divs(self):
-        if not self:
-            return ''
-        return ''.join([e for e in self])

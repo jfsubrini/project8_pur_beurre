@@ -8,8 +8,7 @@ from django.contrib.auth.models import User
 
 
 # Imports from my app
-from .models import NutritionGrade, Category, Food, MySelection
-
+from .models import NutritionGrade, Category, Food, MySelection # voir si utilise tout
 
 
 ################################################################
@@ -348,7 +347,6 @@ class FoodInfoTestCase(TestCase):
     def setUp(self):
         """Data sample to run the tests.
         """
-        
         # Sample of a substitute (Gerblé) food data.
         category = Category.objects.create(name="Pâte à tartiner")
         gerble = {
@@ -419,7 +417,7 @@ class SelectionTestCase(TestCase):
 
         # Gerblé food as a saved food by the user.
         self.saved_food = MySelection.objects.create(
-            my_healthy_foods=healthy_foods_selection(self.gerble), user=self.user) ### PB avec my_healthy_foods=...
+            my_healthy_foods=healthy_foods_selection(self.gerble), user=self.user) ### PB
 
     def test_selection_logged_in(self):
         """Connexion to the Selection page that must return HTTP 200,
@@ -464,12 +462,29 @@ class SelectionTestCase(TestCase):
 #  OPEN FOOD FACTS API - POPULATION OF THE PUR_BEURRE DATABASE #
 ################################################################
 
-class OFFAPITestCase(TestCase):
-    """
-    Testing ....
-    """
+# class OffApiTestCase(TestCase):
+#     """
+#     Testing the Off_api custom django management command
+#     that populate the pur-beurre database.
+#     """
 
-    def bbbb(self):
-        """Testing ....
-        """
-        pass
+#     def test_command_mock(self, monkeypatch):
+#         """Test using a mock to simulate the HTTP requests to the OFF API.
+#         To test the Google Maps Geocoding API by mocking the response
+#         and expecting the right result for 'openclassrooms'.
+#         """
+#         CATEGORIES_LIST = CATEGORIES_LIST[0]
+#         category = CATEGORIES_LIST
+
+#         results = {"products":\
+#         [{'product_name': 'Nutella', 'brands': 'Ferrero', 'image_front_url': 'https://blabla', \
+#         'image_nutrition_url': 'https://blablabla', \
+#         'nutrition_grade_fr': 'e', 'nutriments':[{'nutrition-score-fr_100g': 26}], \
+#         'url': 'https://moreblablabla'}]}
+
+#         def mockreturn(request, params):
+#             return results
+#         monkeypatch.setattr(urllib.request, 'urlopen', mockreturn)
+
+#         self.assertEqual(Category.objects.all().exists(), True)
+#         self.assertEqual(Food.objects.all().exists(), True)

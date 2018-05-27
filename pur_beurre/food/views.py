@@ -13,7 +13,7 @@ from django.http import Http404
 
 # Imports from my app
 from .models import Food, MySelection
-from .forms import AccountForm, ValidationErrorList
+from .forms import AccountForm
 
 
 
@@ -22,7 +22,7 @@ def register(request):
     """View to the user account creation page and validation of the user form."""
     # Analysis and treatment of the register form that has been sent.
     if request.method == "POST":
-        form = AccountForm(request.POST, error_class=ValidationErrorList)
+        form = AccountForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
@@ -64,10 +64,10 @@ def foodresult(request):
     # into the database, searching by name AND brand, if informed by the user.
     query = query.split(',')
     try:
-        query_name = query[0].strip().lower().capitalize()
-        query_brand = query[1].strip().lower().capitalize()
+        query_name = query[0].strip().lower().capitalize() ## lower et capitalize sert ?
+        query_brand = query[1].strip().lower().capitalize() ## lower et capitalize sert ?
     except IndexError:
-        query_name = query[0].strip().lower().capitalize()
+        query_name = query[0].strip().lower().capitalize() ## lower et capitalize sert ?
         query_brand = None
 
     ##########    DISPLAY SUBSTITUTE FOODS   ##########
@@ -119,8 +119,8 @@ def foodresult(request):
         # The case it's a new selected food by the user.
         else:
             MySelection.objects.create(
-                my_healthy_foods=Food.objects.healthy_foods_selection.filter(food_saved[0]), user=request.user)
-                ######## a revoir my_healthy_foods=Food.objects.healthy_foods_selection.filter(food_saved[0])
+                # my_healthy_foods=Food.objects.filter(food_saved[0]), user=request.user)
+                my_healthy_foods=food_saved[0], user=request.user)
             food_selected = True
 
     # Pagination : no more than 6 substitute products in a page.
@@ -170,9 +170,8 @@ def selection(request):
     """View to the user's personal selection of healthy food.
     Possibility to delete a selected product."""
 
-    # Getting the list of all the selected healthy foods by the user, order by categories.
+    # Getting the list of all the selected healthy foods by the user.
     foods_saved = MySelection.objects.filter(user=request.user)
-    foods_saved = foods_saved.order_by('category')
 
     # If the user wants to delete a selected healthy food from is portfolio.
     selected_deleted = False

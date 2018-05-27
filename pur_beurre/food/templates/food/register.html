@@ -59,7 +59,7 @@
 			{% if errors %}
 	    		{% for key, error in errors %}
 					{% autoescape off %}
-        				<li>{{ error }}</li>
+        				{{ error }}
       				{% endautoescape %}
               	{% endfor %}
     		{% endif %}

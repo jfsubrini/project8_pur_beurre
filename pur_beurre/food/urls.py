@@ -21,7 +21,6 @@ urlpatterns = [
     path('account/signin/', LoginView.as_view(template_name='food/signin.html'), name='signin'),
     path('account/signout/', LogoutView.as_view(template_name='food/home.html'), name='signout'),
     path('foodresult/', views.foodresult, name='foodresult'),
-    # re_path(r'^foodinfo/(?P<pk>\d+)/$', views.foodinfo, name='foodinfo'),
     re_path(r'^foodinfo/(?P<pk>\d+)/$', views.FoodInfo.as_view(), name='foodinfo'),
     path('selection/', views.selection, name='selection'),
     path('imprint/', TemplateView.as_view(template_name='food/imprint.html'), name='imprint'),
