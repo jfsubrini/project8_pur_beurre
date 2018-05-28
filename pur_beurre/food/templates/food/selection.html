@@ -29,7 +29,7 @@
     <div class="row pad_items">
       
       {% for food_saved in foods_saved %}
-      <div class="col-md-4 col-xs-12 popup-gallery">
+      <div class="col-md-4 col-xs-12">
         <a class="portfolio-box badge1" data-badge="{{ food_saved.nutrition_grade }}" href="{{ food_saved.image_food }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
           <figure>
             <img class="img-fluid img_center" src="{{ food_saved.image_food }}" alt="{{ food_saved.name }}" width="100%">
@@ -48,7 +48,7 @@
               <form method="post">
                 {% csrf_token %}
                 <input type="hidden" name="food_saved_delete" value="{{ food_saved.id }}">
-                <figcaption class="save"><button><span class="fa fa-trash fa-lg"> Supprimer</span></button></figcaption>
+                <figcaption class="save"><button><span class="fa fa-trash fa-4"> Supprimer</span></button></figcaption>
               </form>
           </figure>
       </div>

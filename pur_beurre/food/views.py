@@ -62,6 +62,7 @@ def foodresult(request):
     ##########            PARSING            ##########
     # Parsing of the query to better find the query product
     # into the database, searching by name AND brand, if informed by the user.
+    query2 = query
     query = query.split(',')
     try:
         query_name = query[0].strip().lower().capitalize() ## lower et capitalize sert ?
@@ -110,7 +111,7 @@ def foodresult(request):
     if request.user.is_authenticated and request.method == 'POST':
         posted = True
         food_saved = request.POST.get('substitute')
-        food_saved = Food.objects.filter(id=food_saved)[:1]
+        food_saved = Food.objects.get(id=food_saved)
         # Verify if this food has been already selected by the user.
         verify = MySelection.objects.filter(my_healthy_foods=food_saved, user=request.user)
         # The case that the food has been already selected by the user.
@@ -118,9 +119,8 @@ def foodresult(request):
             food_selected = False
         # The case it's a new selected food by the user.
         else:
-            MySelection.objects.create(
-                # my_healthy_foods=Food.objects.filter(food_saved[0]), user=request.user)
-                my_healthy_foods=food_saved[0], user=request.user)
+            saved, is_new_profile = MySelection.objects.get_or_create(user=request.user)
+            saved.my_healthy_foods.add(food_saved)
             food_selected = True
 
     # Pagination : no more than 6 substitute products in a page.
@@ -140,6 +140,7 @@ def foodresult(request):
         'food_selected': food_selected,
         'posted': posted,
         'paginate': True,
+        'query2': query2
     }
     return render(request, 'food/foodresult.html', context)
 
@@ -171,15 +172,15 @@ def selection(request):
     Possibility to delete a selected product."""
 
     # Getting the list of all the selected healthy foods by the user.
-    foods_saved = MySelection.objects.filter(user=request.user)
-
+    my_selection = MySelection.objects.get(user=request.user)
+    foods_saved = my_selection.my_healthy_foods.all()
     # If the user wants to delete a selected healthy food from is portfolio.
     selected_deleted = False
     if request.method == 'POST':
         food_saved_delete = request.POST.get('food_saved_delete')
-        food_saved_delete = MySelection.objects.get(pk=food_saved_delete.id)
+        food_saved_delete = Food.objects.get(pk=food_saved_delete)
         if food_saved_delete:
-            food_saved_delete.delete()
+            my_selection.my_healthy_foods.remove(food_saved_delete)
             selected_deleted = True
 
     # Pagination : no more than 6 saved products in a page.
