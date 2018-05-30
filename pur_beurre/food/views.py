@@ -62,13 +62,13 @@ def foodresult(request):
     ##########            PARSING            ##########
     # Parsing of the query to better find the query product
     # into the database, searching by name AND brand, if informed by the user.
-    query2 = query
+    original_query = query
     query = query.split(',')
     try:
-        query_name = query[0].strip().lower().capitalize() ## lower et capitalize sert ?
-        query_brand = query[1].strip().lower().capitalize() ## lower et capitalize sert ?
+        query_name = query[0].strip().lower().capitalize()
+        query_brand = query[1].strip().lower().capitalize()
     except IndexError:
-        query_name = query[0].strip().lower().capitalize() ## lower et capitalize sert ?
+        query_name = query[0].strip().lower().capitalize()
         query_brand = None
 
     ##########    DISPLAY SUBSTITUTE FOODS   ##########
@@ -119,7 +119,9 @@ def foodresult(request):
             food_selected = False
         # The case it's a new selected food by the user.
         else:
+            # Get or create a profile (MySelection) with the connected user.
             saved, is_new_profile = MySelection.objects.get_or_create(user=request.user)
+            # Save for that user profile the new healthy food in his portfolio.
             saved.my_healthy_foods.add(food_saved)
             food_selected = True
 
@@ -140,21 +142,9 @@ def foodresult(request):
         'food_selected': food_selected,
         'posted': posted,
         'paginate': True,
-        'query2': query2
+        'original_query': original_query
     }
     return render(request, 'food/foodresult.html', context)
-
-
-# ####### PAGE D'INFORMATION SUR L'ALIMENT #######
-# def foodinfo(request, pk):
-#     """View to the page that gives food information for each product."""
-#     food_info = get_object_or_404(Food, pk=pk)
-
-#   # What to render to the template.
-#     context = {
-#         'food_info': food_info
-#     }
-#     return render(request, 'food/foodinfo.html', context)
 
 
 ####### PAGE D'INFORMATION SUR L'ALIMENT #######
@@ -172,7 +162,7 @@ def selection(request):
     Possibility to delete a selected product."""
 
     # Getting the list of all the selected healthy foods by the user.
-    my_selection = MySelection.objects.get(user=request.user)
+    my_selection = MySelection.objects.get(user=request.user)    
     foods_saved = my_selection.my_healthy_foods.all()
     # If the user wants to delete a selected healthy food from is portfolio.
     selected_deleted = False

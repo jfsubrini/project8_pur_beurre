@@ -30,7 +30,7 @@
       
       {% for food_saved in foods_saved %}
       <div class="col-md-4 col-xs-12">
-        <a class="portfolio-box badge1" data-badge="{{ food_saved.nutrition_grade }}" href="{{ food_saved.image_food }}"><!-- Attention, il faut rajouter l'extension .jpg ici-->
+        <a class="portfolio-box badge1" data-badge="{{ food_saved.nutrition_grade }}" href="{{ food_saved.image_food }}">
           <figure>
             <img class="img-fluid img_center" src="{{ food_saved.image_food }}" alt="{{ food_saved.name }}" width="100%">
               <div class="portfolio-box-caption">

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 
 # Imports from my app
-from .models import NutritionGrade, Category, Food, MySelection # voir si utilise tout
+from .models import NutritionGrade, Category, Food, MySelection
 
 
 ################################################################
@@ -137,11 +137,9 @@ class RegisterTestCase(TestCase):
             'password': self.password
         })
         self.assertRedirects(response, '/account/')
-        self.assertEqual(
+        self.assertTrue(
             User.objects.filter(
-                username=self.username, email=self.email).exists(),
-            True
-        )
+                username=self.username, email=self.email).exists())
 
     def test_register_invalid(self):
         """Post an invalid form from the Sign In page that must return
@@ -155,11 +153,9 @@ class RegisterTestCase(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'food/register.html')
-        self.assertEqual(
+        self.assertFalse(
             User.objects.filter(
-                username=self.username, email=self.email, password=self.password).exists(),
-            False
-        )
+                username=self.username, email=self.email, password=self.password).exists())
 
 
 ################################################################
@@ -298,42 +294,20 @@ class FoodResultTestCase(TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
 
-################# A REVOIR LE FOODRESULT SAVE ET NOT SAVED ########################
     def test_foodresult_save(self):
-        """Saving a substitute food into MySelection table
-        while the user is logged in.
-        ############ renvoie page aliment ##############
-        """
-
+        """Saving a substitute food into MySelection table while the user
+        is logged in and return HTTP 200."""
         # The user is logged in.
         self.client.login(username=self.username, password=self.password)
+        # Testing the saving of the Gerblé food by the user.
+        url = reverse('foodresult')+'/?query=Nutella'
+        data = {"food_saved": self.gerble.id}
+        response = self.client.post(url, data)
+        # Stays in the same Selection page.
+        self.assertEqual(response.status_code, 200)
+        # The substitute food must be saved into MySelection table for that user.
+        self.assertTrue(MySelection.objects.all().exists())
 
-        # # Testing the saving of a substitute food.
-        # path = reverse('foodresult')+'/?query=Nutella'
-        # response = self.client.post(path, {"substitute": self.substitute.id})
-        # self.assertEqual(response.status_code, 200)
-
-        # The substitute food must be registered into MySelection table.
-        self.assertEqual(
-            MySelection.objects.all().exists(),
-            True
-        )
-
-    def test_foodresult_not_saved(self):
-        """Not saving a substitute food into MySelection table
-        while the user is logged in, because of invalid data.
-        """
-
-        # The user is logged in.
-        self.client.login(username=self.username, password=self.password)
-
-        ######
-
-        # The substitute food mustn't be registered into MySelection table.
-        self.assertEqual(
-            MySelection.objects.filter(id=1).exists(),
-            False
-        )
 
 ################################################################
 #                         PAGE ALIMENT                         #
@@ -416,8 +390,8 @@ class SelectionTestCase(TestCase):
         self.gerble = gerble
 
         # Gerblé food as a saved food by the user.
-        self.saved_food = MySelection.objects.create(
-            my_healthy_foods=healthy_foods_selection(self.gerble), user=self.user) ### PB
+        self.saved_food = MySelection.objects.create(user=self.user)
+        self.saved_food.my_healthy_foods.add(self.gerble)
 
     def test_selection_logged_in(self):
         """Connexion to the Selection page that must return HTTP 200,
@@ -426,9 +400,7 @@ class SelectionTestCase(TestCase):
         # The user is logged in.
         self.client.login(username=self.username, password=self.password)
         # Testing the access while logged in.
-        response = self.client.get(
-            reverse('selection', args=(self.saved_food.id,))
-            )
+        response = self.client.get(reverse('selection'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'food/selection.html')
 
@@ -436,55 +408,21 @@ class SelectionTestCase(TestCase):
         """Trying to access the Selection page while logged out that renders
         HTTP 302, redirection to the Sign In page.
         """
-        response = self.client.get(
-            reverse('selection', args=(self.saved_food.id,))
-            )
+        response = self.client.get(reverse('selection'))
         self.assertRedirects(
             response, (reverse('signin'))+'?redirection_vers='+(reverse('selection')))
 
-    def test_selection_empty(self):
-        """Connexion to the Selection page that must return HTTP 200,
-        with an empty food selection.
-        """
-        response = self.client.get(
-            reverse('selection', args=None)
-            )
-        self.assertEqual(response.status_code, 200)
-
     def test_selection_delete(self):
-        """Delete a saved product of the Selection page that must return HTTP 200,
-        an update template and delete that food into the MySelection table.
+        """Delete a saved product (Gerblé) of the Selection page that must return HTTP 200,
+        and the selected food must be deleted from the MySelection table for that user.
         """
-        pass
-        ## A FAIRE ##
-
-################################################################
-#  OPEN FOOD FACTS API - POPULATION OF THE PUR_BEURRE DATABASE #
-################################################################
-
-# class OffApiTestCase(TestCase):
-#     """
-#     Testing the Off_api custom django management command
-#     that populate the pur-beurre database.
-#     """
-
-#     def test_command_mock(self, monkeypatch):
-#         """Test using a mock to simulate the HTTP requests to the OFF API.
-#         To test the Google Maps Geocoding API by mocking the response
-#         and expecting the right result for 'openclassrooms'.
-#         """
-#         CATEGORIES_LIST = CATEGORIES_LIST[0]
-#         category = CATEGORIES_LIST
-
-#         results = {"products":\
-#         [{'product_name': 'Nutella', 'brands': 'Ferrero', 'image_front_url': 'https://blabla', \
-#         'image_nutrition_url': 'https://blablabla', \
-#         'nutrition_grade_fr': 'e', 'nutriments':[{'nutrition-score-fr_100g': 26}], \
-#         'url': 'https://moreblablabla'}]}
-
-#         def mockreturn(request, params):
-#             return results
-#         monkeypatch.setattr(urllib.request, 'urlopen', mockreturn)
-
-#         self.assertEqual(Category.objects.all().exists(), True)
-#         self.assertEqual(Food.objects.all().exists(), True)
+        # The user is logged in.
+        self.client.login(username=self.username, password=self.password)
+        # The user deletes the Gerblé food from his/her portfolio.
+        url = reverse('selection')
+        data = {"food_saved_delete": self.gerble.id}
+        response = self.client.post(url, data)       
+        # Stays in the same Selection page.
+        self.assertEqual(response.status_code, 200)
+        # Testing that this deleted food is not in MySelection table anymore, for that user.
+        self.assertFalse(MySelection.objects.all().exists())

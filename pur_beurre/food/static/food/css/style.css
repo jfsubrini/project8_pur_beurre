@@ -26,8 +26,7 @@
 .food_to_replace {
 	padding-top: 8rem;
   	padding-bottom: calc(3rem - 56px);
-/*  	background: #345A61 url("../img/front_fr.3.400.jpg") no-repeat center center;
-*/	background-color: #345A61;
+	background-color: #345A61;
 }
 
 .food_name {
@@ -90,10 +89,6 @@
 
 .imprint_img {
   	background-image: url("../img/imprint.jpg");
-}
-
-.foodresult_img {
-  	background-image: url("../img/credits.jpg") !important;  /* A changer l'image */
 }
 
 /* Color of the headline for various templates */
