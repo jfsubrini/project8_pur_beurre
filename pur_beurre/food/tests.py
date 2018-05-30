@@ -307,6 +307,7 @@ class FoodResultTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # The substitute food must be saved into MySelection table for that user.
         self.assertTrue(MySelection.objects.all().exists())
+        # A revoir
 
 
 ################################################################
@@ -421,8 +422,9 @@ class SelectionTestCase(TestCase):
         # The user deletes the Gerblé food from his/her portfolio.
         url = reverse('selection')
         data = {"food_saved_delete": self.gerble.id}
-        response = self.client.post(url, data)       
+        response = self.client.post(url, data)
         # Stays in the same Selection page.
         self.assertEqual(response.status_code, 200)
         # Testing that this deleted food is not in MySelection table anymore, for that user.
-        self.assertFalse(MySelection.objects.all().exists())
+        self.assertFalse(MySelection.objects.filter(id=self.gerble.id).exists())
+         # A revoir

@@ -162,7 +162,7 @@ def selection(request):
     Possibility to delete a selected product."""
 
     # Getting the list of all the selected healthy foods by the user.
-    my_selection = MySelection.objects.get(user=request.user)    
+    my_selection = MySelection.objects.get(user=request.user)
     foods_saved = my_selection.my_healthy_foods.all()
     # If the user wants to delete a selected healthy food from is portfolio.
     selected_deleted = False
