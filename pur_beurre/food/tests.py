@@ -300,7 +300,7 @@ class FoodResultTestCase(TestCase):
         # The user is logged in.
         self.client.login(username=self.username, password=self.password)
         # Testing the saving of the Gerblé food by the user.
-        url = reverse('foodresult')+'/?query=Nutella'
+        url = reverse('foodresult')
         data = {"food_saved": self.gerble.id}
         response = self.client.post(url, data)
         # Stays in the same Selection page.

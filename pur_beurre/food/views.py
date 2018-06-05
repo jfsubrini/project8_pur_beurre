@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views.generic.detail import DetailView
 from django.http import Http404
 
@@ -54,92 +54,107 @@ def account(request):
 def foodresult(request):
     """View to the page that displays all the substitute food products
     related to the category searched by the user. Possibility to save an healthy product."""
-
-    query = request.GET.get('query')
-    if not query:
-        return render(request, 'food/home.html')
-
-    ##########            PARSING            ##########
-    # Parsing of the query to better find the query product
-    # into the database, searching by name AND brand, if informed by the user.
-    original_query = query
-    query = query.split(',')
-    try:
-        query_name = query[0].strip().lower().capitalize()
-        query_brand = query[1].strip().lower().capitalize()
-    except IndexError:
-        query_name = query[0].strip().lower().capitalize()
-        query_brand = None
-
-    ##########    DISPLAY SUBSTITUTE FOODS   ##########
-    # If the user entered a product name AND a product brand (after the comma).
-    if query_name and query_brand:
-        try:
-            food_search = Food.objects.filter(
-                name__icontains=query_name,
-                brand__icontains=query_brand)[:1].get()
-        except Food.DoesNotExist:
-            raise Http404(
-                """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
-                Essayez une autre requête."""
-                )
-    # If the user only entered a product name.
-    elif query_name:
-        try:
-            food_search = Food.objects.filter(
-                name__icontains=query_name)[:1].get()
-        except Food.DoesNotExist:
-            raise Http404(
-                """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
-                Essayez une autre requête."""
-                )
-    # Query expression to find into the database the substitutes products
-    # with the same category and better nutrition_grade than the food_search.
-    substitutes = {}
-    try:
-        substitutes = Food.objects.filter(
-            category=food_search.category,
-            nutrition_grade__lt=food_search.nutrition_grade)
-        substitutes = substitutes.order_by('nutrition_grade', 'nutrition_score')
-    except Food.DoesNotExist:
-        return substitutes
-
-    ##########      SAVE AN HEALTHY FOOD     ##########
-    # If the user wants to save an healthy food for is portfolio.
-    food_selected = False
     posted = False
-    if request.user.is_authenticated and request.method == 'POST':
-        posted = True
-        food_saved = request.POST.get('substitute')
-        food_saved = Food.objects.get(id=food_saved)
-        # Verify if this food has been already selected by the user.
-        verify = MySelection.objects.filter(my_healthy_foods=food_saved, user=request.user)
-        # The case that the food has been already selected by the user.
-        if verify.exists():
-            food_selected = False
-        # The case it's a new selected food by the user.
-        else:
-            # Get or create a profile (MySelection) with the connected user.
-            saved, is_new_profile = MySelection.objects.get_or_create(user=request.user)
-            # Save for that user profile the new healthy food in his portfolio.
-            saved.my_healthy_foods.add(food_saved)
-            food_selected = True
+    paginate = False
+    food_search = []
+    substitutes = {}
+    original_query = ""
 
-    # Pagination : no more than 6 substitute products in a page.
-    paginator = Paginator(substitutes, 6)
-    page = request.GET.get('page')
-    try:
-        substitutes = paginator.page(page)
-    except PageNotAnInteger:
-        substitutes = paginator.page(1)
-    except EmptyPage:
-        substitutes = paginator.page(paginator.num_pages)
+    ########## GET THE SUBSTITUTES LIST ##########
+
+    if request.method == 'GET':
+        query = request.GET.get('query')
+        if not query:
+            return render(request, 'food/home.html')
+
+        ##########            PARSING            ##########
+        # Parsing of the query to better find the query product
+        # into the database, searching by name AND brand, if informed by the user.
+        original_query = query
+        query = query.split(',')
+        try:
+            query_name = query[0].strip().lower().capitalize()
+            query_brand = query[1].strip().lower().capitalize()
+        except IndexError:
+            query_name = query[0].strip().lower().capitalize()
+            query_brand = None
+
+        ##########    DISPLAY SUBSTITUTE FOODS   ##########
+        # If the user entered a product name AND a product brand (after the comma).
+        if query_name and query_brand:
+            try:
+                food_search = Food.objects.filter(
+                    name__icontains=query_name,
+                    brand__icontains=query_brand)[:1].get()
+            except Food.DoesNotExist:
+                raise Http404(
+                    """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
+                    Essayez une autre requête."""
+                    )
+        # If the user only entered a product name.
+        elif query_name:
+            try:
+                food_search = Food.objects.filter(
+                    name__icontains=query_name)[:1].get()
+            except Food.DoesNotExist:
+                raise Http404(
+                    """Votre requête ne permet pas de récupérer un aliment dans notre base de données.
+                    Essayez une autre requête."""
+                    )
+        # Query expression to find into the database the substitutes products
+        # with the same category and better nutrition_grade than the food_search.
+        try:
+            substitutes = Food.objects.filter(
+                category=food_search.category,
+                nutrition_grade__lt=food_search.nutrition_grade)
+            substitutes = substitutes.order_by('nutrition_grade', 'nutrition_score')
+        except Food.DoesNotExist:
+            return substitutes
+
+        # Pagination : no more than 6 substitute products in a page.
+        paginator = Paginator(substitutes, 6)
+        page = request.GET.get('page')
+        try:
+            substitutes = paginator.page(page)
+        except PageNotAnInteger:
+            substitutes = paginator.page(1)
+        except EmptyPage:
+            substitutes = paginator.page(paginator.num_pages)
+
+    ########## POST A SAVED HEALTHY FOOD ##########
+
+    if request.method == 'POST':
+        query = request.POST.get('query')
+        page = request.GET.get('page')
+        if page == None:
+            page = 1
+
+        # If the user wants to save an healthy food for is portfolio.
+        if request.user.is_authenticated:
+            posted = True
+            food_saved = request.POST.get('substitute')
+            food_saved = Food.objects.get(id=food_saved)
+            # Verify if this food has been already selected by the user.
+            verify = MySelection.objects.filter(my_healthy_foods=food_saved, user=request.user)
+            # The case that the food has been already selected by the user.
+            if verify.exists():
+                # Redirect to the same foodresult page (same number) and get the substitutes list.
+                return redirect(
+                    reverse('foodresult') + '?query=' + str(query) + '&page=' + str(page))
+            # The case it's a new selected food by the user.
+            else:
+                # Get or create a profile (MySelection) with the connected user.
+                saved, is_new_profile = MySelection.objects.get_or_create(user=request.user)
+                # Save for that user profile the new healthy food in his portfolio.
+                saved.my_healthy_foods.add(food_saved)
+                # Redirect to the same foodresult page (same number) and get the substitutes list.
+                return redirect(
+                    reverse('foodresult') + '?query=' + str(query) + '&page=' + str(page))
 
     # What to render to the template.
     context = {
         'food_search': food_search,
         'substitutes': substitutes,
-        'food_selected': food_selected,
         'posted': posted,
         'paginate': True,
         'original_query': original_query
