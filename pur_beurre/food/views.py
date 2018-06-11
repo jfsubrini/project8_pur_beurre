@@ -126,7 +126,7 @@ def foodresult(request):
     if request.method == 'POST':
         query = request.POST.get('query')
         page = request.GET.get('page')
-        if page == None:
+        if page is None:
             page = 1
 
         # If the user wants to save an healthy food for is portfolio.

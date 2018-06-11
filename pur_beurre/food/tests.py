@@ -296,18 +296,17 @@ class FoodResultTestCase(TestCase):
 
     def test_foodresult_save(self):
         """Saving a substitute food into MySelection table while the user
-        is logged in and return HTTP 200."""
+        is logged in and return HTTP 302."""
         # The user is logged in.
         self.client.login(username=self.username, password=self.password)
         # Testing the saving of the Gerblé food by the user.
         url = reverse('foodresult')
-        data = {"food_saved": self.gerble.id}
+        data = {"substitute": self.gerble.id}
         response = self.client.post(url, data)
-        # Stays in the same Selection page.
-        self.assertEqual(response.status_code, 200)
+        # Redirect to the same Selection page.
+        self.assertEqual(response.status_code, 302)
         # The substitute food must be saved into MySelection table for that user.
         self.assertTrue(MySelection.objects.all().exists())
-        # A revoir
 
 
 ################################################################
@@ -427,4 +426,3 @@ class SelectionTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         # Testing that this deleted food is not in MySelection table anymore, for that user.
         self.assertFalse(MySelection.objects.filter(id=self.gerble.id).exists())
-         # A revoir
