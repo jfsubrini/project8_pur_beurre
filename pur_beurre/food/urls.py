@@ -2,7 +2,7 @@
 
 
 # Django imports
-from django.urls import path, re_path
+from django.urls import path
 from django.views.generic import TemplateView
 from django.contrib.auth.views import LoginView, LogoutView
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path('account/signin/', LoginView.as_view(template_name='food/signin.html'), name='signin'),
     path('account/signout/', LogoutView.as_view(template_name='food/home.html'), name='signout'),
     path('foodresult/', views.foodresult, name='foodresult'),
-    re_path(r'^foodinfo/(?P<pk>\d+)/$', views.FoodInfo.as_view(), name='foodinfo'),
+    path('foodinfo/<int:pk>/', views.FoodInfo.as_view(), name='foodinfo'),
     path('selection/', views.selection, name='selection'),
     path('imprint/', TemplateView.as_view(template_name='food/imprint.html'), name='imprint'),
 ]
