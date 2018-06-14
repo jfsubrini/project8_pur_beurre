@@ -7,5 +7,4 @@ food/management/__pycache__
 food/management/commands/__pycache__
 .pytest_cache/
 pur_beurre/.coverage
-pur_beurre/food/migrations/
 *.pyc
