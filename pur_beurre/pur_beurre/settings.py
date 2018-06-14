@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', '!q7q$2-2x%5e*ee%5o7(%$v+*z@la_)kd(nl3
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if os.environ.get('ENV') == 'PRODUCTION':
-    DEBUG = False
+    DEBUG = True
     ALLOWED_HOSTS = ['purbeurre8.herokuapp.com']
 else:
     DEBUG = True
