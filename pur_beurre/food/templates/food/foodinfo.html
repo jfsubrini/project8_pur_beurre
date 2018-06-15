@@ -31,14 +31,19 @@
       <div class="col-md-6">
         <figure>
           <figcaption class="food_items">Nutriscore</figcaption>
+            <a class="portfolio-box" href="{% static 'food/img/nutriscore/' %}nutriscore_{{ food_info.nutrition_grade }}.jpg">
             <img class="img-fluid img_center" src="{% static 'food/img/nutriscore/' %}nutriscore_{{ food_info.nutrition_grade }}.jpg" alt="Nutriscore de {{ food_info.name }} : {{ food_info.nutrition_grade }}" width="100%">
               <div class="portfolio-box-caption">
                 <div class="portfolio-box-caption-content">
                   <div class="project-category text-faded">
                     Photo
                   </div>
+                  <div class="project-name">
+                    Nutriscore
+                  </div>
                 </div>
               </div>
+            </a>
         </figure>
       </div>
       <div class="col-md-6">
